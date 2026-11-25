@@ -108,7 +108,9 @@
   };
   const drawing = (key) => ART[key] || "";
 
-  /* Illustrations supplied for the site. If a file is missing, the drawing named in `fallback` is shown instead. */
+  /* ------------------------------------------------------------------ *
+   * Supplied illustrations (each falls back gracefully if missing)     *
+   * ------------------------------------------------------------------ */
   const IMAGES = {
     connie: {
       src: "images/01-connie-sees-rodney.jpg", fallback: "metalBox",
@@ -118,33 +120,55 @@
     rodney: {
       src: "images/02-rodney-sees-toby.jpg", fallback: "metalBox",
       alt: "Over Rodney’s shoulder, holding the metal box: a younger boy at the far end of the alley, near the street. Connie watches from the doorway behind them.",
-      caption: "What Rodney saw from the same alley, at the same moment.",
+      caption: "Same alley. Same moment. Different direction.",
+      note: "The footage nobody ran.",
     },
     sockets: {
-      src: "images/03-socket-set.jpg", fallback: "socketSet",
+      src: "images/03-socket-set.jpg", fallback: "",
       alt: "Rodney opens the metal box on the Whit’s End counter to show a tray of sockets and a ratchet while Connie leans in. A skateboard sits behind the counter.",
-      caption: "Forty-one sockets. Zero dollars.",
+      caption: "",
+    },
+    map: {
+      src: "images/09-fishing-map.jpg", fallback: "fishingPole",
+      alt: "A hand-drawn map on notebook paper pinned to the corkboard: a dotted route from the Rathbones’ garage past Whit’s End and along a river to a fishing spot that has been completely scribbled out in black ink.",
+      caption: "Rodney’s route. Fishing spot classified.",
+      note: "Does this look like a getaway plan? It’s a LAKE.",
     },
     step: {
       src: "images/04-alley-step.jpg", fallback: "door",
       alt: "Rodney and the younger boy sit side by side on a crate beside the broken side door. Connie is visible inside.",
       caption: "The alley, about twenty minutes after Rodney almost went fishing.",
+      note: "Not pictured: the lake. Waiting.",
     },
     screwdriver: {
       src: "images/05-screwdriver.jpg", fallback: "screwdriver",
       alt: "In the alley, Whit holds out a screwdriver to Rodney while the boy kneels to fit a new board on the damaged door. Connie smiles from the doorway. The socket set sits open on the ground.",
-      caption: "Exhibit E.",
-    },
-    rumor: {
-      src: "images/07-wrath-of-rath.jpg", fallback: "", portrait: true,
-      alt: "A dramatic movie-style poster titled “The Wrath of Rath.” Rodney stands in front of Whit’s End under a swirling red sky, gripping a metal box, a fishing pole over his shoulder. Tagline: “He came to fish. They made it personal.”",
-      caption: "The version going around Odyssey by lunchtime. Artist’s rendering. Not to scale. Not accurate.",
+      caption: "Exhibit F.",
+      note: "Wait. Is this the hero edit?",
     },
     closing: {
-      src: "images/06-closing-argument.jpg", fallback: "metalBox",
+      src: "images/06-closing-argument.jpg", fallback: "",
       alt: "Rodney sits in a Whit’s End booth beside a sundae and a cassette recorder with a microphone, gesturing as he talks. A page of crossed-out notes lies on the table.",
       caption: "The defense, dictating.",
     },
+  };
+  const CAST_PHOTO = {
+    src: "images/08-cast-photo.jpg",
+    alt: "Rodney, holding his metal box, scowls beside a group photo pinned to a corkboard. A sticky note under the photo reads, “You guys took the picture already?”",
+  };
+  const POSTER = {
+    src: "images/07-wrath-of-rath.jpg",
+    alt: "A dramatic movie-style poster titled “The Wrath of Rath.” Rodney stands in front of Whit’s End under a swirling red sky, gripping a metal box, a fishing pole over his shoulder. Tagline: “He came to fish. They made it personal.”",
+  };
+
+  const ART_ALT = {
+    door: "Drawing of a splintered side door.",
+    socketSet: "Drawing of an open toolbox with a ratchet inside.",
+    metalBox: "Drawing of a closed gray metal box with a handle and two latches.",
+    cashBox: "Drawing of a closed cash box with a handle and a key lock.",
+    skateboard: "Drawing of a skateboard.",
+    fishingPole: "Drawing of a fishing pole with a reel and a red and white bobber.",
+    screwdriver: "Drawing of a red-handled screwdriver.",
   };
 
   /* ------------------------------------------------------------------ *
@@ -174,7 +198,7 @@
   };
 
   /* ------------------------------------------------------------------ *
-   * Seen vs. Assumed ledger                                            *
+   * Seen vs. Assumed                                                   *
    * ------------------------------------------------------------------ */
   const LEDGER = [
     { id: "box", seen: "Rodney running from the alley with a gray metal box.", assumed: "He had the fundraiser’s cash box.", fact: "His dad’s socket set. Forty-one sockets, zero dollars." },
@@ -184,77 +208,7 @@
   ];
 
   /* ------------------------------------------------------------------ *
-   * Evidence board (File 3)                                            *
-   * ------------------------------------------------------------------ */
-  const CARDS = [
-    {
-      id: "connie", kind: "witness", label: "Witness statement", title: "Connie Kendall",
-      prompt: "Rodney asks: “When you saw me running, did you see the cash box? Or did you see <em>a</em> box?”",
-      action: "Hear her answer",
-      reveal: [
-        ["p", "Connie opens her mouth to answer. Then she closes it again."],
-        ["say", "Connie", "…A box. Gray. Metal. With a handle."],
-        ["say", "Connie", "The cash box is gray and metal."],
-        ["say", "Rodney", "So is half my dad’s garage."],
-      ],
-    },
-    {
-      id: "sockets", kind: "evidence", label: "Exhibit B", title: "The Gray Metal Box", image: "sockets",
-      prompt: "Rodney sets his box on the counter and reaches for the latches.",
-      action: "Open the box",
-      ledger: ["box.fact"],
-      reveal: [
-        ["p", "Two latches. One lid. Inside: forty-one sockets, one ratchet, zero dollars. Scratched into the lid: <em>PROPERTY OF R. RATHBONE SR. RODNEY, PUT IT BACK.</em>"],
-        ["say", "Rodney", "Borrowed. With permission. I’d like that on the record."],
-      ],
-    },
-    {
-      id: "board", kind: "evidence", label: "Exhibit C", title: "The Skateboard", art: "skateboard",
-      prompt: "Behind the counter, under the raffle table, sits a scuffed skateboard with masking tape on it.",
-      action: "Look closer",
-      reveal: [
-        ["p", "The tape says <em>CONFISCATED: NO RIDING THROUGH THE BAKE SALE.</em>"],
-        ["say", "Rodney", "If somebody broke in to steal stuff, why’s the most stealable thing in the building still sitting here?"],
-        ["say", "Rodney", "Who brought this in?"],
-      ],
-    },
-    {
-      id: "door", kind: "evidence", label: "Exhibit A", title: "The Side Door", art: "door",
-      prompt: "Gouges around the latch. A bent kick plate. Rodney reaches for the handle.",
-      action: "Try the handle",
-      ledger: ["door.fact"],
-      reveal: [
-        ["p", "He presses down. The handle turns easily, and the door swings open without a sound."],
-        ["say", "Rodney", "Somebody put a lot of work into a door that was never locked."],
-        ["say", "Rodney", "Who used this door this morning?"],
-      ],
-    },
-    {
-      id: "fenn", kind: "witness", label: "Witness statement", title: "Mrs. Fenn, Fundraiser Volunteer",
-      requires: ["board", "door"],
-      lockText: "Rodney needs a reason to ask her. Look at the skateboard and the side door first.",
-      prompt: "Rodney asks who brought in the skateboard and who used the side door.",
-      action: "Hear her statement",
-      reveal: [
-        ["say", "Mrs. Fenn", "Well, both were me, dear. A young man rode that board straight through my lemon bars, so I brought it inside. And I propped the side door unlocked at seven for setup. We carried tables in and out all morning."],
-        ["say", "Mrs. Fenn", "Oh! And the cash box. I moved it to the office around ten-thirty. Too many people near the register. I meant to tell somebody."],
-      ],
-    },
-    {
-      id: "cashbox", kind: "evidence", label: "Exhibit D", title: "The Cash Box", art: "cashBox",
-      requires: ["fenn"],
-      lockText: "Nobody knows where to look yet. Hear from Mrs. Fenn first.",
-      prompt: "Whit’s office. On the desk, under a cardigan.",
-      action: "Check the office",
-      ledger: ["cash.fact"],
-      reveal: [
-        ["p", "One gray cash box, still locked. Inside: $312.50 and a roll of raffle tickets. Every cent accounted for."],
-      ],
-    },
-  ];
-
-  /* ------------------------------------------------------------------ *
-   * First impression vote + later review                               *
+   * First impression + review                                          *
    * ------------------------------------------------------------------ */
   const VOTE = {
     question: "What do you think was in Rodney’s hands?",
@@ -265,12 +219,11 @@
     ],
   };
   const voteLabel = (id) => (VOTE.options.find((o) => o[0] === id) || [])[1];
-
   const DETAILS = [
     ["boy", "Rodney sped up when the boy reached the street", "Same three beats, with one more thing to see. That’s the whole case, really."],
     ["abox", "Connie saw “a box,” not “the cash box”", "One small word. “A” instead of “the.” Half the town ran with the difference."],
     ["sockets", "The socket set: forty-one sockets, zero dollars", "Forty-one sockets make a very convincing defense."],
-    ["board", "The skateboard still behind the counter", "The best clue was the thing nobody took. Rodney noticed what wasn’t missing."],
+    ["board", "The skateboard still behind the counter", "The best clue was the thing nobody took."],
     ["unlocked", "The side door was never locked", "A damaged door that was never locked tells you a lot about whoever damaged it."],
     ["office", "The cash box, safe in the office", "Sometimes the missing thing is just in the next room."],
     ["toby", "Toby telling the truth himself", "Nothing settles a case like somebody telling the truth about himself."],
@@ -281,263 +234,280 @@
     "Which detail finally settled it for you?";
 
   /* ------------------------------------------------------------------ *
-   * The story                                                          *
-   * Blocks: ["p", html] ["say", who, html] ["think", who, html]        *
-   *         ["beat"] ["note", html] ["rewind", text] ["stamp", text]   *
-   *         ["sfx", text] ["account", key]                             *
+   * Exhibit 2: the tape                                                *
    * ------------------------------------------------------------------ */
-  const CHAPTERS = [
+  const TAPE = [
     {
-      title: "The Accusation", short: "Accusation",
-      scenes: [
-        {
-          time: "10:52 a.m. · Whit’s End fundraiser", heading: "Connie’s Account", image: "connie",
-          ledger: ["box.seen", "ran.seen"],
-          blocks: [
-            ["p", "Saturday. The Whit’s End fundraiser had three kinds of brownies, a raffle for a hand-built birdhouse, and a jar of lemonade money that kept getting heavier. Connie Kendall was on napkin duty."],
-            ["p", "This is her account. Every word of it is true."],
-            ["account", "connie"],
-          ],
-        },
-        {
-          time: "10:58 a.m. · Back inside", heading: "Two Things Missing", art: "door",
-          ledger: ["cash.seen", "door.seen"],
-          blocks: [
-            ["p", "Back inside, two things were wrong. The fundraiser’s cash box wasn’t in its usual spot beside the register. And the side door to the alley had fresh gouges around the latch, as if someone had gone at it with something sharp."],
-            ["p", "Connie wasn’t trying to be unfair. She’d known Rodney a long time. She remembered the Bones of Rath, the things that went missing back then, and the excuses that came after. When a stove has burned you more than once, you stop testing whether it’s hot."],
-            ["say", "Connie", "I know what I saw."],
-            ["p", "She did. She just didn’t know yet which parts she’d seen and which parts she’d filled in."],
-            ["note", "By lunchtime, half of Odyssey knew what happened. The other half heard it from the first half."],
-            ["img", "rumor"],
-          ],
-        },
-        {
-          time: "Before you go further", heading: "Your First Impression", interactive: "vote",
-          blocks: [
-            ["p", "You’ve heard one witness. Before anyone else talks, make your call."],
-          ],
-        },
+      time: "10:42", heading: "Gone Fishing (Almost)", image: "map",
+      blocks: [
+        ["p", "Rodney Rathbone had a plan for Saturday, and it was a good one: one lake, one fishing pole, zero people."],
+        ["p", "He also had his dad’s socket set. Borrowed with permission, which he would like entered into the record. The reel on his fishing pole had one loose nut that had been mocking him for two weeks."],
+        ["think", "Rodney", "Is a whole socket set overkill for one nut? Yes. Is it the right tool for the job? Also yes. Probably."],
+        ["p", "He cut through the alley behind Whit’s End because alleys have fewer people in them, and people in Odyssey tended to have opinions about Rodney."],
       ],
     },
     {
-      title: "Rewind Ten Minutes", short: "Rewind",
-      scenes: [
-        {
-          time: "10:42 a.m. · Ten minutes earlier", heading: "Gone Fishing (Almost)", art: "fishingPole",
-          blocks: [
-            ["rewind", "◀◀ REWIND 10:00"],
-            ["p", "Rodney Rathbone had a plan for Saturday, and it was a good one: one lake, one fishing pole, zero people."],
-            ["p", "He also had his dad’s socket set. Borrowed with permission, which he would like entered into the record. The reel on his fishing pole had one loose nut that had been mocking him for two weeks."],
-            ["think", "Rodney", "Is a whole socket set overkill for one nut? Yes. Is it the right tool for the job? Also yes. Probably."],
-            ["p", "He cut through the alley behind Whit’s End because alleys have fewer people in them, and people in Odyssey tended to have opinions about Rodney."],
-          ],
-        },
-        {
-          time: "10:49 a.m. · The alley", heading: "The Kid With the Screwdriver", art: "screwdriver",
-          blocks: [
-            ["p", "Halfway down the alley, Rodney spotted Toby Pruitt crouched by the side door of Whit’s End with a screwdriver. Toby was nine, lived two streets over, and had a skateboard sticker on everything he owned."],
-            ["say", "Rodney", "Uh. Toby? What are you doing to Whit’s door?"],
-            ["say", "Toby", "Mrs. Fenn took my skateboard ’cause I rode through the bake sale. It’s right inside. I’m just getting it back."],
-            ["p", "Rodney opened his mouth to say several wise and mature things. Before any of them came out, Toby jammed the screwdriver into the gap by the latch and leaned on it."],
-            ["note", "File this away: Toby never tried the handle."],
-          ],
-        },
-        {
-          time: "10:52 a.m. · The same ten seconds", heading: "Rodney’s Account", image: "rodney",
-          blocks: [
-            ["p", "Now the same ten seconds, from the other end of the alley. Same crash. Same box. Same shout. All of it true."],
-            ["account", "rodney"],
-          ],
-        },
-        {
-          time: "Side by side", heading: "Same Ten Seconds, Two Witnesses", interactive: "compare",
-          blocks: [
-            ["p", "Put the two statements next to each other. The highlighted details appear in both. Nobody lied. They were looking in different directions."],
-          ],
-        },
-        {
-          time: "10:55 a.m. · By the hardware store", heading: "“I Got Experience”",
-          blocks: [
-            ["p", "Rodney caught up with Toby at the corner by the hardware store, mostly because Toby had stopped to cry behind a mailbox."],
-            ["say", "Toby", "I broke it. I broke Whit’s End. They’re gonna call my mom. They’re gonna call my mom <em>and</em> the police."],
-            ["p", "Rodney had been on the wrong side of a lot of doors in his life. He knew exactly what that feeling in Toby’s stomach was."],
-            ["say", "Rodney", "Relax. I’ll handle it. I got experience in this area."],
-            ["p", "Toby looked up at him like a drowning kid looks at a lifeguard. Rodney liked that look more than he expected to."],
-            ["p", "It was the last good feeling he had for about two hours."],
-          ],
-        },
+      time: "10:49", heading: "The Kid With the Screwdriver", art: "screwdriver",
+      blocks: [
+        ["p", "Halfway down the alley, Rodney spotted Toby Pruitt crouched by the side door of Whit’s End with a screwdriver. Toby was nine, lived two streets over, and had a skateboard sticker on everything he owned."],
+        ["say", "Rodney", "Uh. Toby? What are you doing to Whit’s door?"],
+        ["say", "Toby", "Mrs. Fenn took my skateboard ’cause I rode through the bake sale. It’s right inside. I’m just getting it back."],
+        ["p", "Rodney opened his mouth to say several wise and mature things. Before any of them came out, Toby jammed the screwdriver into the gap by the latch and leaned on it."],
+        ["note", "File this away: Toby never tried the handle."],
       ],
     },
     {
-      title: "The Investigation", short: "Investigation",
-      scenes: [
-        {
-          time: "12:20 p.m. · Behind the arcade", heading: "An Offer From Old Friends",
-          blocks: [
-            ["p", "News travels fast in Odyssey. By noon it had reached the arcade, where two former Bones of Rath, Kirby and Moose, were waiting for Rodney like a welcoming committee nobody had asked for."],
-            ["say", "Kirby", "Heard you knocked over Whit’s End. Here’s the deal. You were with us all morning. We’ll swear to it."],
-            ["say", "Moose", "We’re good at this. We’ve been practicing on our parents for years."],
-            ["p", "Rodney thought about it, and he thought about it seriously. It would probably work. No questions about Toby. No standing in front of Connie. He could be at the lake by two."],
-            ["think", "Rodney", "Except if I was at the arcade all morning, I didn’t see anything. And I saw everything."],
-            ["say", "Rodney", "That’s the nicest lie anybody’s ever offered me. I gotta pass."],
-            ["say", "Kirby", "Your funeral."],
-            ["say", "Rodney", "It’s a fundraiser, actually."],
-          ],
-        },
-        {
-          time: "12:41 p.m. · Whit’s End", heading: "The Defense Calls Its First Witness",
-          blocks: [
-            ["p", "The bell over the door jingled, and every conversation in Whit’s End stopped at once, which makes a sound all its own."],
-            ["say", "Connie", "You’ve got some nerve showing up here."],
-            ["say", "Rodney", "Yeah, I get that a lot. Can I ask a few questions? Then you can go back to looking at me like that."],
-            ["p", "Connie crossed her arms. It wasn’t a yes, but it wasn’t a no."],
-            ["note", "Up next: Rodney builds his defense one fact at a time. Open every witness statement and evidence card you can."],
-          ],
-        },
-        {
-          time: "12:44 p.m. · The counter", heading: "The Evidence Board", interactive: "board",
-          blocks: [
-            ["p", "Open the cards in any order. Some answers lead to new questions."],
-          ],
-        },
-        {
-          time: "1:02 p.m. · The counter", heading: "“Why Didn’t You Stop?”",
-          blocks: [
-            ["p", "Mrs. Fenn came back from the office holding the gray cash box in both hands, with every dollar still inside. Everyone who had repeated the story suddenly found their sundaes very interesting."],
-            ["p", "Connie looked at the cash box. Then at the socket set. Then at Rodney."],
-            ["say", "Connie", "Why didn’t you just stop when I called you?"],
-            ["say", "Rodney", "You want the answer from right now, or the answer from when I was running?"],
-            ["say", "Connie", "Both."],
-            ["say", "Rodney", "When I was running? When somebody yells my name like that, it’s never because I won the raffle. And I had somewhere to be."],
-            ["beat"],
-            ["say", "Rodney", "Right now? I was behind a busted door with a metal box, running away from somebody who said my name. If I’d seen that, I’d have thought it was me too."],
-            ["p", "It was not a fun thing to realize. Connie had filled in half the story. Rodney had handed her the other half."],
-            ["say", "Connie", "And the door? Who damaged the door?"],
-            ["say", "Rodney", "Is that a question for the defense? Because the defense would like to go fishing."],
-          ],
-        },
+      time: "10:52", heading: "Rodney’s Account", image: "rodney",
+      blocks: [
+        ["p", "The same ten seconds Connie saw, from the other end of the alley. Same crash. Same box. Same shout. All of it true."],
+        ["account", "rodney"],
       ],
     },
     {
-      title: "The Choice", short: "Choice",
-      scenes: [
-        {
-          time: "1:05 p.m. · The front step", heading: "Free to Go", art: "fishingPole",
-          blocks: [
-            ["p", "Rodney had his name back. His fishing pole was still leaning against the alley fence, and the lake hadn’t gone anywhere. All he had to do was leave."],
-            ["think", "Rodney", "Not my door. Not my screwdriver. Not my problem. Technically I’m the victim here. A victim who is going fishing."],
-            ["p", "He had one foot on the front step when he heard Connie’s voice from the back room."],
-          ],
-        },
-        {
-          time: "1:06 p.m. · Overheard", heading: "Somebody Has to Pay",
-          blocks: [
-            ["say", "Connie", "I hate to ask, Mrs. Fenn. But the repair can’t come out of the fundraiser money, and you were supposed to lock up after setup. Would you be willing to cover it?"],
-            ["say", "Mrs. Fenn", "Oh. Well. Of course, dear. It was my door to lock. I’ll manage."],
-            ["p", "She said it like someone who would manage by going without something."],
-            ["p", "Rodney stood very still. Mrs. Fenn called everybody “dear,” including him. Last year she had sold him a brownie after the rest of the bake-sale table decided not to."],
-            ["say", "Rodney, under his breath", "Aw, come on."],
-          ],
-        },
-        {
-          time: "1:20 p.m. · The alley", heading: "“You Said You’d Handle It”", image: "step",
-          blocks: [
-            ["p", "Rodney found Toby in the alley, sitting on a crate next to the door he’d wrecked. He had come back on his own. He just hadn’t made it inside."],
-            ["say", "Toby", "Did you handle it?"],
-            ["say", "Rodney", "Kind of. I handled <em>me</em>. You’re still… pending."],
-            ["say", "Toby", "You said you’d handle it."],
-            ["say", "Rodney", "I did say that. I say a lot of stuff when I’m trying to sound like I know what I’m doing."],
-            ["beat"],
-            ["say", "Rodney", "I’ll go in with you, though."],
-            ["p", "Toby thought it over. Then he dug into his pocket, counted out four dollars and sixty cents, and made the face people make in a dentist’s waiting room."],
-          ],
-        },
+      time: "10:52", heading: "Same Ten Seconds, Two Witnesses", compare: true,
+      blocks: [
+        ["p", "Put the two statements side by side. The highlighted details appear in both. Nobody lied. They were looking in different directions."],
       ],
     },
     {
-      title: "The Verdict", short: "Verdict",
-      scenes: [
-        {
-          time: "1:24 p.m. · Whit’s End", heading: "The Kid Testifies",
-          ledger: ["ran.fact"],
-          blocks: [
-            ["p", "The bell over the door jingled again. This time nobody looked at Rodney. They looked at the small kid standing in front of him."],
-            ["say", "Connie", "Toby? Is something wrong?"],
-            ["beat"],
-            ["p", "Toby took a long time to start. Rodney didn’t fill the silence for him. Neither did anyone else."],
-            ["say", "Toby", "I did the door. I wanted my board back. I didn’t even try the handle."],
-            ["beat"],
-            ["say", "Toby", "Rodney didn’t do anything. He just chased me ’cause I was running at the street. I’ve got four dollars and sixty cents. And I can sweep. And carry stuff. I’ll work off the rest."],
-            ["p", "Mrs. Fenn set down her lemon bars and looked at Toby for a long moment. Then she smiled."],
-            ["say", "Mrs. Fenn", "Well. I could use a good sweeper. You may have your board back when we’re finished. And you may attend future bake sales on foot."],
-          ],
-        },
-        {
-          time: "1:30 p.m. · In front of everybody", heading: "Connie Sets the Record Straight",
-          blocks: [
-            ["say", "Connie", "Rodney, I’m sorry. I saw you running, and I’d decided what happened before I’d really seen anything. Then I said it out loud. To a lot of people."],
-            ["say", "Rodney", "To be fair, I did run. And I’ve earned some of that. Like, a lot of it. There’s a whole file."],
-            ["say", "Connie", "Then you’ve earned a new page in it."],
-            ["p", "She turned to the room: the bake table, the man from the hardware store, the two moms by the raffle jar."],
-            ["say", "Connie", "Everyone? Can I have a minute? This morning I told some of you that Rodney took the cash box. He didn’t. Nobody did. I was wrong, and I said it loudly, so I’m saying this loudly too."],
-            ["p", "Then she picked up the phone behind the counter and went down the list of everyone she’d told. It was longer than she wanted to admit."],
-          ],
-        },
-        {
-          time: "1:45 p.m. · The counter", heading: "The Defense Admits Something",
-          blocks: [
-            ["say", "Rodney", "Since everybody’s being honest… I almost didn’t come back. I cleared my name and had one foot out the door. Mrs. Fenn was gonna pay for it, and I was gonna let her."],
-            ["say", "Whit", "What changed your mind?"],
-            ["say", "Rodney", "She sold me a brownie once."],
-            ["beat"],
-            ["say", "Rodney", "And I told a nine-year-old I’d handle it."],
-            ["say", "Whit", "You could have walked away clean, and you came back anyway. That counts for more than you think."],
-            ["p", "Rodney didn’t know what to do with that, so he looked at the floor. It was very clean. Toby had already started sweeping."],
-          ],
-        },
-        {
-          time: "2:10 p.m. · The alley door", heading: "Exhibit E: A Screwdriver", image: "screwdriver", interactive: "review",
-          blocks: [
-            ["p", "Whit carried a toolbox out to the alley, where Toby was already kneeling by the splintered trim. Whit held out a screwdriver. It was Toby’s, the one he’d dropped on the step that morning."],
-            ["say", "Whit", "This door needs new trim and a straightened kick plate. I could use somebody who knows his way around a socket set. Will you help with the repair?"],
-            ["p", "Rodney looked at the screwdriver. Then at Connie. Then back at the screwdriver."],
-            ["say", "Rodney", "Before I touch this, can we get a witness?"],
-            ["p", "Connie laughed for the first time all day."],
-            ["say", "Connie", "I’ll stand right here."],
-            ["stamp", "Verdict: Not guilty. Also: hired."],
-          ],
-        },
-        {
-          time: "Later that afternoon · The back booth", heading: "Rodney’s Closing Argument", image: "closing", optional: true, interactive: "closing",
-          blocks: [
-            ["p", "Whit found an old cassette recorder in the back. As part of working off the door, Toby agreed to type up whatever Rodney said into it. He was told to type <em>everything</em>."],
-          ],
-        },
-      ],
-    },
-    {
-      title: "Epilogue", short: "Epilogue",
-      scenes: [
-        {
-          time: "Three weeks later · The Rathbones’ garage", heading: "A Knock on the Garage Door", art: "socketSet", interactive: "closed",
-          blocks: [
-            ["p", "Saturday again. The reel on Rodney’s fishing pole finally clicked the way a reel is supposed to. The lake was waiting, and for once nobody in Odyssey was talking about him."],
-            ["p", "Then Toby Pruitt came running up the driveway, out of breath, with his skateboard under one arm."],
-            ["say", "Toby", "I knocked over Lily Okafor’s bike with my board. The fender’s all bent and the chain came off. She doesn’t know yet."],
-            ["beat"],
-            ["say", "Toby", "Will you come with me while I tell her?"],
-            ["p", "Rodney looked at the fishing pole. He looked at the blue, lake-shaped Saturday he had planned."],
-            ["p", "Then he set the pole against the wall and picked up his tools."],
-            ["say", "Rodney", "Bring your four dollars."],
-            ["say", "Toby", "I’ve got six now."],
-            ["say", "Rodney", "Look at you. Growing."],
-          ],
-        },
+      time: "10:55", heading: "“I Got Experience”",
+      blocks: [
+        ["p", "Rodney caught up with Toby at the corner by the hardware store, mostly because Toby had stopped to cry behind a mailbox."],
+        ["say", "Toby", "I broke it. I broke Whit’s End. They’re gonna call my mom. They’re gonna call my mom <em>and</em> the police."],
+        ["p", "Rodney had been on the wrong side of a lot of doors in his life. He knew exactly what that feeling in Toby’s stomach was."],
+        ["say", "Rodney", "Relax. I’ll handle it. I got experience in this area."],
+        ["p", "Toby looked up at him like a drowning kid looks at a lifeguard. Rodney liked that look more than he expected to."],
+        ["p", "It was the last good feeling he had for about two hours."],
       ],
     },
   ];
 
-  /* Rodney's closing argument, as typed up by Toby. */
+  /* ------------------------------------------------------------------ *
+   * Exhibit 3: the board                                               *
+   * ------------------------------------------------------------------ */
+  const CARDS = [
+    {
+      id: "sockets", label: "Exhibit B", title: "The Toolbox", art: "socketSet", tag: ["gray-box", "gray metal box"],
+      claim: "“The loot.” Allegedly.",
+      action: "Open the toolbox",
+      ledger: ["box.fact"],
+      reveal: [
+        ["tag", "sockets-tag", "ratchet and sockets"],
+        ["photo", "sockets"],
+        ["say", "Rodney", "Connie. When you saw me running, did you see the cash box? Or did you see <em>a</em> box?"],
+        ["say", "Connie", "…A box. Gray. Metal. With a handle."],
+        ["p", "Two latches. One lid. Inside: forty-one sockets, one ratchet, zero dollars. Scratched into the lid: <em>PROPERTY OF R. RATHBONE SR. RODNEY, PUT IT BACK.</em>"],
+      ],
+      establishes: "The gray metal box Connie saw was a socket set. She saw <em>a</em> box. The town decided which one.",
+    },
+    {
+      id: "cashbox", label: "Exhibit C", title: "The Cash Box", art: "cashBox", tag: ["cash-missing", "missing cash box"],
+      claim: "Last seen: NOT with me.",
+      action: "Ask where it went",
+      ledger: ["cash.fact"],
+      reveal: [
+        ["say", "Mrs. Fenn", "Oh! The cash box. I moved it to the office around ten-thirty, dear. Too many people near the register. I meant to tell somebody."],
+        ["p", "Whit’s office. On the desk, under a cardigan: one gray cash box, still locked. Inside, $312.50 and a roll of raffle tickets."],
+      ],
+      establishes: "Nothing was stolen. The cash box was in the office the whole time.",
+    },
+    {
+      id: "board", label: "Exhibit D", title: "The Skateboard", art: "skateboard",
+      claim: "Why is this still here???",
+      action: "Look closer",
+      reveal: [
+        ["p", "Behind the counter, under the raffle table. Masking tape on the deck: <em>CONFISCATED: NO RIDING THROUGH THE BAKE SALE.</em>"],
+        ["say", "Rodney", "If somebody broke in to steal stuff, why’s the most stealable thing in the building still sitting here? Who brought this in?"],
+        ["say", "Mrs. Fenn", "I did, dear. A young man rode it straight through my lemon bars."],
+      ],
+      establishes: "Whoever went at the door never got in. The one thing they wanted never moved.",
+    },
+    {
+      id: "door", label: "Exhibit E", title: "The Splintered Door", art: "door",
+      claim: "Crime scene. (Probably.)",
+      action: "Try the handle",
+      ledger: ["door.fact"],
+      reveal: [
+        ["p", "Gouges by the latch. A bent kick plate. Rodney presses the handle. It turns easily, and the door swings open without a sound."],
+        ["say", "Rodney", "Somebody put a lot of work into a door that was never locked. Who used this door this morning?"],
+        ["say", "Mrs. Fenn", "Me again. I propped it unlocked at seven for setup. We carried tables in and out all morning."],
+      ],
+      establishes: "The door was unlocked all morning. Whoever pried at it never tried the handle.",
+    },
+  ];
+  /* Red strings. Each runs between two anchors on the board. The first one moves when the toolbox is opened. */
+  const CONNECTIONS = [
+    {
+      a: "gray-box", b: "cash-missing", bSolved: "sockets-tag", need: ["sockets"],
+      ends: "“gray metal box” ↔ “missing cash box”", endsSolved: "“gray metal box” ↔ “ratchet and sockets”",
+      theory: "BOTH GRAY. BOTH METAL. COINCIDENCE??",
+      truth: "The string moved. The gray metal box was a ratchet and sockets. Connie saw <em>a</em> box, and the story filled in which one.",
+    },
+    {
+      a: "pin-sockets", b: "pin-door", need: ["sockets", "door"], ends: "The Toolbox ↔ The Splintered Door",
+      theory: "They think I used THESE on the door.",
+      truth: "Pry marks come from a screwdriver, not a socket set. And the door was never locked anyway.",
+    },
+    {
+      a: "pin-door", b: "pin-board", need: ["door", "board"], ends: "The Splintered Door ↔ The Skateboard",
+      theory: "Skateboard = getaway vehicle???",
+      truth: "Whoever pried at the door was after the skateboard. The skateboard never left.",
+    },
+    {
+      a: "pin-board", b: "pin-cashbox", need: ["board", "cashbox"], ends: "The Skateboard ↔ The Cash Box",
+      theory: "Mrs. Fenn knows something.",
+      truth: "She did know something. She moved both of them for safekeeping. That’s the whole conspiracy.",
+    },
+  ];
+  const cardTitle = (id) => CARDS.find((c) => c.id === id).title;
+
+  /* ------------------------------------------------------------------ *
+   * Exhibit 4: how the story spread                                    *
+   * ------------------------------------------------------------------ */
+  const SPREAD = [
+    ["I saw Rodney running with a metal box.", "Connie Kendall, 10:53 a.m. (True, as far as it goes.)"],
+    ["Rodney ran off with the cash box.", "Overheard at the bake table, 11:20 a.m."],
+    ["Rodney broke into Whit’s End and took all the fundraiser money.", "Somebody’s cousin, 11:45 a.m."],
+    ["I hear he had a getaway driver.", "The line at the hardware store, 12:10 p.m."],
+  ];
+  const ALIBI = [
+    ["p", "By noon the story had reached the arcade, where two former Bones of Rath, Kirby and Moose, were waiting for Rodney like a welcoming committee nobody had asked for."],
+    ["say", "Kirby", "Heard you knocked over Whit’s End. Here’s the deal. You were with us all morning. We’ll swear to it."],
+    ["say", "Moose", "We’re good at this. We’ve been practicing on our parents for years."],
+    ["p", "Rodney thought about it, and he thought about it seriously. It would probably work. No questions about Toby. No standing in front of Connie. He could be at the lake by two."],
+    ["think", "Rodney", "Except if I was at the arcade all morning, I didn’t see anything. And I saw everything."],
+    ["say", "Rodney", "That’s the nicest lie anybody’s ever offered me. I gotta pass."],
+    ["say", "Kirby", "Your funeral."],
+    ["say", "Rodney", "It’s a fundraiser, actually."],
+  ];
+
+  /* ------------------------------------------------------------------ *
+   * The ending (the board goes quiet at scene 3)                       *
+   * ------------------------------------------------------------------ */
+  const QUIET_FROM = 2;
+  const ENDING = [
+    {
+      time: "1:02 p.m. · The counter", heading: "“Why Didn’t You Stop?”",
+      blocks: [
+        ["p", "Mrs. Fenn came back from the office holding the gray cash box in both hands, with every dollar still inside. Everyone who had repeated the story suddenly found their sundaes very interesting."],
+        ["p", "Connie looked at the cash box. Then at the socket set. Then at Rodney."],
+        ["say", "Connie", "Why didn’t you just stop when I called you?"],
+        ["say", "Rodney", "You want the answer from right now, or the answer from when I was running?"],
+        ["say", "Connie", "Both."],
+        ["say", "Rodney", "When I was running? When somebody yells my name like that, it’s never because I won the raffle. And I had somewhere to be."],
+        ["beat"],
+        ["say", "Rodney", "Right now? I was behind a busted door with a metal box, running away from somebody who said my name. If I’d seen that, I’d have thought it was me too."],
+        ["p", "It was not a fun thing to realize. Connie had filled in half the story. Rodney had handed her the other half."],
+        ["say", "Connie", "And the door? Who damaged the door?"],
+        ["say", "Rodney", "Is that a question for the defense? Because the defense would like to go fishing."],
+      ],
+    },
+    {
+      time: "1:05 p.m. · The front step", heading: "Free to Go", art: "fishingPole", nextLabel: "Walk out the door",
+      blocks: [
+        ["p", "Rodney had his name back. His fishing pole was still leaning against the alley fence, and the lake hadn’t gone anywhere. All he had to do was leave."],
+        ["think", "Rodney", "Not my door. Not my screwdriver. Not my problem. Technically I’m the victim here. A victim who is going fishing."],
+      ],
+    },
+    {
+      time: "1:06 p.m. · Overheard", heading: "Somebody Has to Pay",
+      blocks: [
+        ["p", "He had one foot on the front step when he heard Connie’s voice from the back room."],
+        ["say", "Connie", "I hate to ask, Mrs. Fenn. But the repair can’t come out of the fundraiser money, and you were supposed to lock up after setup. Would you be willing to cover it?"],
+        ["say", "Mrs. Fenn", "Oh. Well. Of course, dear. It was my door to lock. I’ll manage."],
+        ["p", "She said it like someone who would manage by going without something."],
+        ["p", "Rodney stood very still. Mrs. Fenn called everybody “dear,” including him. Last year she had sold him a brownie after the rest of the bake-sale table decided not to."],
+        ["say", "Rodney, under his breath", "Aw, come on."],
+      ],
+    },
+    {
+      time: "1:20 p.m. · The alley", heading: "“You Said You’d Handle It”", image: "step",
+      blocks: [
+        ["p", "Rodney found Toby in the alley, sitting on a crate next to the door he’d wrecked. He had come back on his own. He just hadn’t made it inside."],
+        ["say", "Toby", "Did you handle it?"],
+        ["say", "Rodney", "Kind of. I handled <em>me</em>. You’re still… pending."],
+        ["say", "Toby", "You said you’d handle it."],
+        ["say", "Rodney", "I did say that. I say a lot of stuff when I’m trying to sound like I know what I’m doing."],
+        ["beat"],
+        ["say", "Rodney", "I’ll go in with you, though."],
+        ["p", "Toby thought it over. Then he dug into his pocket, counted out four dollars and sixty cents, and made the face people make in a dentist’s waiting room."],
+      ],
+    },
+    {
+      time: "1:24 p.m. · Whit’s End", heading: "The Kid Testifies", ledger: ["ran.fact"],
+      blocks: [
+        ["p", "The bell over the door jingled. This time nobody looked at Rodney. They looked at the small kid standing in front of him."],
+        ["say", "Connie", "Toby? Is something wrong?"],
+        ["beat"],
+        ["p", "Toby took a long time to start. Rodney didn’t fill the silence for him. Neither did anyone else."],
+        ["say", "Toby", "I did the door. I wanted my board back. I didn’t even try the handle."],
+        ["beat"],
+        ["say", "Toby", "Rodney didn’t do anything. He just chased me ’cause I was running at the street. I’ve got four dollars and sixty cents. And I can sweep. And carry stuff. I’ll work off the rest."],
+        ["p", "Mrs. Fenn set down her lemon bars and looked at Toby for a long moment. Then she smiled."],
+        ["say", "Mrs. Fenn", "Well. I could use a good sweeper. You may have your board back when we’re finished. And you may attend future bake sales on foot."],
+      ],
+    },
+    {
+      time: "1:30 p.m. · In front of everybody", heading: "Connie Sets the Record Straight",
+      blocks: [
+        ["say", "Connie", "Rodney, I’m sorry. I saw you running, and I’d decided what happened before I’d really seen anything. Then I said it out loud. To a lot of people."],
+        ["say", "Rodney", "To be fair, I did run. And I’ve earned some of that. Like, a lot of it. There’s a whole file."],
+        ["say", "Connie", "Then you’ve earned a new page in it."],
+        ["p", "She turned to the room: the bake table, the man from the hardware store, the two moms by the raffle jar."],
+        ["say", "Connie", "Everyone? Can I have a minute? This morning I told some of you that Rodney took the cash box. He didn’t. Nobody did. I was wrong, and I said it loudly, so I’m saying this loudly too."],
+        ["p", "Then she picked up the phone behind the counter and went down the list of everyone she’d told. It was longer than she wanted to admit. Somewhere near the bottom was the line at the hardware store."],
+      ],
+    },
+    {
+      time: "1:45 p.m. · The counter", heading: "The Defense Admits Something",
+      blocks: [
+        ["say", "Rodney", "Since everybody’s being honest… I almost didn’t come back. I cleared my name and had one foot out the door. Mrs. Fenn was gonna pay for it, and I was gonna let her."],
+        ["say", "Whit", "What changed your mind?"],
+        ["say", "Rodney", "She sold me a brownie once."],
+        ["beat"],
+        ["say", "Rodney", "And I told a nine-year-old I’d handle it."],
+        ["say", "Whit", "You could have walked away clean, and you came back anyway. That counts for more than you think."],
+        ["p", "Rodney didn’t know what to do with that, so he looked at the floor. It was very clean. Toby had already started sweeping."],
+      ],
+    },
+    {
+      time: "2:10 p.m. · The alley door", heading: "Exhibit F: A Screwdriver", image: "screwdriver", interactive: "verdict",
+      nextLabel: "Rodney’s Closing Argument (optional)",
+      blocks: [
+        ["p", "Whit carried a toolbox out to the alley, where Toby was already kneeling by the splintered trim. Whit held out a screwdriver. It was Toby’s, the one he’d dropped on the step that morning."],
+        ["say", "Whit", "This door needs new trim and a straightened kick plate. I could use somebody who knows his way around a socket set. Will you help with the repair?"],
+        ["p", "Rodney looked at the screwdriver. Then at Connie. Then back at the screwdriver."],
+        ["say", "Rodney", "Before I touch this, can we get a witness?"],
+        ["p", "Connie laughed for the first time all day."],
+        ["say", "Connie", "I’ll stand right here."],
+        ["stamp", "Case Closed"],
+      ],
+    },
+    {
+      time: "Later that afternoon · The back booth", heading: "Rodney’s Closing Argument", image: "closing", optional: true, interactive: "closing",
+      blocks: [
+        ["p", "Whit found an old cassette recorder in the back. As part of working off the door, Toby agreed to type up whatever Rodney said into it. He was told to type <em>everything</em>."],
+      ],
+    },
+    {
+      time: "Three weeks later · The Rathbones’ garage", heading: "A Knock on the Garage Door", art: "socketSet", interactive: "end",
+      blocks: [
+        ["p", "Saturday again. The reel on Rodney’s fishing pole finally clicked the way a reel is supposed to. The lake was waiting, and for once nobody in Odyssey was talking about him."],
+        ["p", "Then Toby Pruitt came running up the driveway, out of breath, with his skateboard under one arm."],
+        ["say", "Toby", "I knocked over Lily Okafor’s bike with my board. The fender’s all bent and the chain came off. She doesn’t know yet."],
+        ["beat"],
+        ["say", "Toby", "Will you come with me while I tell her?"],
+        ["p", "Rodney looked at the fishing pole. He looked at the blue, lake-shaped Saturday he had planned."],
+        ["p", "Then he set the pole against the wall and picked up his tools."],
+        ["say", "Rodney", "Bring your four dollars."],
+        ["say", "Toby", "I’ve got six now."],
+        ["say", "Rodney", "Look at you. Growing."],
+      ],
+    },
+  ];
+  const VERDICT_INDEX = ENDING.findIndex((s) => s.interactive === "verdict");
+  const LAST_INDEX = ENDING.length - 1;
+
   const CLOSING = {
     head: "TRANSCRIPT. Rodney’s Closing Argument, as dictated to a cassette recorder. Typed by T. Pruitt, who was told to type everything.",
     paras: [
@@ -559,15 +529,32 @@
     ],
   };
 
+  const SECTIONS = [
+    { id: "connie", num: "File 1", title: "What Connie Saw", nav: "Connie", scribble: "Star witness. (Allegedly.)", next: "Next: The Missing Ten Minutes" },
+    { id: "rewind", num: "File 2", title: "The Missing Ten Minutes", nav: "Rewind", scribble: "The part NOBODY asked about.", next: "Next: Pin it on the board" },
+    { id: "board", num: "File 3", title: "The Board", nav: "The Board", scribble: "It’s all connected.", next: "Next: How the story spread" },
+    { id: "spread", num: "File 4", title: "How the Story Spread", nav: "The Story", scribble: "Like telephone, but about me.", next: "Next: Rodney’s own theory" },
+    { id: "theory", num: "File 5", title: "Rodney’s Own Theory", nav: "My Theory", scribble: "Hear me out.", next: "Next: What happened after" },
+    { id: "ending", num: "The Ending", title: "What Happened After", nav: "After", scribble: "", next: null },
+  ];
+  const sectionIndex = (id) => SECTIONS.findIndex((s) => s.id === id);
+
   /* ------------------------------------------------------------------ *
    * State                                                              *
    * ------------------------------------------------------------------ */
-  const KEY = "rodney-case-v2";
-  const fresh = () => ({ ch: 0, sc: 0, maxCh: 0, vote: null, detail: null, cards: [], ledger: [] });
+  const KEY = "rodney-wrath-v3";
+  const fresh = () => ({ unlocked: 1, vote: null, tape: -1, tapeMax: -1, cards: [], spread: 1, theory: false, lifted: false, end: 0, endMax: 0, detail: null, ledger: [] });
   const load = () => {
     try {
       const s = JSON.parse(localStorage.getItem(KEY));
-      if (s && Number.isInteger(s.ch) && CHAPTERS[s.ch] && CHAPTERS[s.ch].scenes[s.sc]) return Object.assign(fresh(), s);
+      if (s && Number.isInteger(s.unlocked)) {
+        const st = Object.assign(fresh(), s);
+        st.unlocked = Math.min(Math.max(1, st.unlocked), SECTIONS.length);
+        st.tape = Math.min(st.tape, TAPE.length - 1);
+        st.end = Math.min(Math.max(0, st.end), LAST_INDEX);
+        st.spread = Math.min(Math.max(1, st.spread), SPREAD.length);
+        return st;
+      }
     } catch (e) { /* storage unavailable */ }
     return null;
   };
@@ -576,9 +563,7 @@
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* ignore */ } };
   const has = (arr, v) => arr.indexOf(v) !== -1;
   const addTo = (arr, v) => { if (!has(arr, v)) { arr.push(v); return true; } return false; };
-
-  const freshLedger = new Set();
-  const addLedger = (keys) => (keys || []).forEach((k) => { if (addTo(state.ledger, k)) freshLedger.add(k.split(".")[0]); });
+  const addLedger = (keys) => { let changed = false; (keys || []).forEach((k) => { changed = addTo(state.ledger, k) || changed; }); if (changed) renderLedger(); };
 
   /* ------------------------------------------------------------------ *
    * Rendering helpers                                                  *
@@ -586,9 +571,9 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const failedImages = new Set();
-  const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduceMotion = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const smooth = () => (reduceMotion ? "auto" : "smooth");
 
-  /* A drawing slot: the supplied icon if there is one, otherwise the inline SVG. */
   const artSlot = (key, alt, cls) => {
     const icon = ICONS[key];
     if (icon && !failedImages.has(icon)) {
@@ -596,46 +581,29 @@
     }
     return `<div class="${cls}" role="img" aria-label="${esc(alt)}">${drawing(key)}</div>`;
   };
-
   const drawingFigure = (key, caption, alt, i) =>
     `<figure class="art drawing line" style="--i:${i}">${artSlot(key, alt, "frame")}${caption ? `<figcaption>${caption}</figcaption>` : ""}</figure>`;
-
   const imageFigure = (key, i) => {
     const im = IMAGES[key];
     if (failedImages.has(im.src)) return im.fallback ? drawingFigure(im.fallback, im.caption, im.alt, i) : "";
-    if (im.portrait) {
-      return `<figure class="art portrait line" style="--i:${i}"><div class="frame"><img src="${im.src}" alt="${esc(im.alt)}" width="848" height="1264" decoding="async" data-remove-on-error></div><figcaption>${im.caption}</figcaption></figure>`;
-    }
-    return `<figure class="art line" style="--i:${i}"><div class="frame"><img src="${im.src}" alt="${esc(im.alt)}" width="1376" height="768" decoding="async" data-fallback="${im.fallback}"></div><figcaption>${im.caption}</figcaption></figure>`;
-  };
-
-  const ART_ALT = {
-    door: "Drawing of a side door in a brick alley wall, with pry marks by the latch and a bent kick plate.",
-    socketSet: "Drawing of an open metal socket set: a ratchet in the lid and two rows of sockets in the tray.",
-    metalBox: "Drawing of a closed gray metal box with a handle and two latches, with motion lines.",
-    cashBox: "Drawing of a small gray cash box with a key lock.",
-    skateboard: "Drawing of a scuffed skateboard with a strip of masking tape on the deck.",
-    fishingPole: "Drawing of a fishing pole with a reel, a curling line, and a red and white bobber.",
-    screwdriver: "Drawing of a red-handled screwdriver.",
-  };
-
-  const accountHTML = (key, i, withAudio) => {
-    const a = ACCOUNTS[key];
-    return `<section class="account line" style="--i:${i}" aria-label="${esc(a.title)}">
-      <h3>${a.title}</h3><p class="sworn">${a.sworn}</p>
-      <ol>${a.beats.map((b, n) => `<li><span class="beat-label">${n + 1} · ${b[0]}</span><p>${b[1]}</p></li>`).join("")}</ol>
-      ${withAudio ? audioButton(a.audio, key === "connie" ? "Connie’s account" : "Rodney’s account") : ""}
-    </section>`;
+    const onErr = im.fallback ? `data-fallback="${im.fallback}"` : "data-remove-on-error";
+    const note = im.note ? `<p class="scribble photo-note"><span class="sr-only">Rodney’s sticky note: </span>${im.note}</p>` : "";
+    return `<figure class="art line" style="--i:${i}">${note}<div class="frame"><img src="${im.src}" alt="${esc(im.alt)}" width="1376" height="768" decoding="async" ${onErr}></div>${im.caption ? `<figcaption>${im.caption}</figcaption>` : ""}</figure>`;
   };
 
   const audioButton = (src, label) =>
     `<button type="button" class="btn btn-small" data-audio="${src}" data-label="${esc(label)}" hidden><span class="ico" aria-hidden="true">▶</span> <span class="lbl">Play ${label}</span></button>`;
 
+  const accountHTML = (key, i) => {
+    const a = ACCOUNTS[key];
+    return `<section class="account line" style="--i:${i}" aria-label="${esc(a.title)}">
+      <h3>${a.title}</h3><p class="sworn">${a.sworn}</p>
+      <ol>${a.beats.map((b, n) => `<li><span class="beat-label">${n + 1} · ${b[0]}</span><p>${b[1]}</p></li>`).join("")}</ol>
+      ${audioButton(a.audio, key === "connie" ? "Connie’s account" : "Rodney’s account")}
+    </section>`;
+  };
   const compareHTML = (i) => `
-    <div class="compare line" style="--i:${i}">
-      ${accountHTML("connie", 0, true)}
-      ${accountHTML("rodney", 0, true)}
-    </div>
+    <div class="compare line" style="--i:${i}">${accountHTML("connie", 0)}${accountHTML("rodney", 0)}</div>
     <p class="compare-key line" style="--i:${i + 1}">Highlighted details appear in both accounts: the crash, the gray metal box, “Rodney!”, and speeding up.</p>`;
 
   const blockHTML = (b, i) => {
@@ -646,311 +614,644 @@
       case "think": return `<p class="line think" ${st}><span class="who">${b[1]}, to himself</span><span class="q">${b[2]}</span></p>`;
       case "beat": return `<p class="line beat" ${st}><span aria-hidden="true">· · ·</span><span class="sr-only">A beat passes.</span></p>`;
       case "note": return `<p class="line note" ${st}>${b[1]}</p>`;
-      case "rewind": return `<p class="line" ${st}><span class="rewind-banner">${b[1]}</span></p>`;
+      case "tag": return `<p class="evtag" data-anchor="${b[1]}">${b[2]}</p>`;
+      case "hand": return `<p class="line hand" ${st}>${b[1]}</p>`;
       case "stamp": return `<p class="line" ${st}><span class="stamp">${b[1]}</span></p>`;
-      case "sfx": return `<p class="line sfx" ${st}>${b[1]}</p>`;
-      case "account": return accountHTML(b[1], i, true);
-      case "img": return imageFigure(b[1], i);
+      case "account": return accountHTML(b[1], i);
+      case "photo": {
+        const im = IMAGES[b[1]];
+        if (failedImages.has(im.src)) return "";
+        return `<figure class="photo"><img src="${im.src}" alt="${esc(im.alt)}" width="1376" height="768" loading="lazy" data-remove-on-error></figure>`;
+      }
       default: return "";
     }
   };
   const blocksHTML = (blocks, start = 0) => blocks.map((b, k) => blockHTML(b, start + k)).join("");
 
+  function play(el) {
+    if (!el) return;
+    el.classList.remove("play");
+    void el.offsetWidth;
+    el.classList.add("play");
+  }
+  function focusEl(el) {
+    if (!el) return;
+    if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "-1");
+    el.focus({ preventScroll: true });
+  }
+
   /* ------------------------------------------------------------------ *
-   * Interactive pieces                                                 *
+   * Section shells                                                     *
    * ------------------------------------------------------------------ */
-  const voteHTML = () => {
+  const els = {};
+
+  function sectionShell(s) {
+    return `<section class="exhibit" id="ex-${s.id}" aria-labelledby="h-${s.id}">
+      <div class="exhibit-head">
+        <div class="exhibit-label"><span class="num">${s.num}</span><h2 id="h-${s.id}" tabindex="-1">${s.title}</h2></div>
+        ${s.scribble ? `<p class="scribble" aria-hidden="true">${s.scribble}</p>` : ""}
+      </div>
+      <div id="body-${s.id}"></div>
+      ${s.next ? `<div class="section-next" id="next-${s.id}"></div>` : ""}
+    </section>`;
+  }
+
+  function renderSections() {
+    els.sections.innerHTML = SECTIONS.slice(0, state.unlocked).map(sectionShell).join("");
+    SECTIONS.slice(0, state.unlocked).forEach((s) => renderSection(s.id, false));
+    renderNav();
+    applyQuiet();
+  }
+
+  function renderNav() {
+    els.nav.innerHTML = SECTIONS.map((s, k) => {
+      if (k >= state.unlocked) return `<li><span aria-disabled="true"><span class="n">${k + 1}</span>${s.nav}</span></li>`;
+      const cur = k === state.unlocked - 1;
+      return `<li><a href="#ex-${s.id}" ${cur ? 'aria-current="true"' : ""}><span class="n">${k + 1}</span>${s.nav}</a></li>`;
+    }).join("");
+  }
+
+  const GATES = {
+    connie: () => (state.vote ? null : "Seal your first impression first."),
+    rewind: () => (state.tapeMax >= TAPE.length - 1 ? null : "Play the tape all the way through."),
+    board: () => (state.cards.length >= CARDS.length ? null : `Open all four cards. (${state.cards.length} of ${CARDS.length})`),
+    spread: () => (state.spread >= SPREAD.length ? null : "Follow the story all the way down."),
+    theory: () => (state.theory ? null : "Examine the exhibit."),
+  };
+
+  function renderNext(id) {
+    const s = SECTIONS[sectionIndex(id)];
+    const box = $(`#next-${id}`);
+    if (!box || !s.next) return;
+    const idx = sectionIndex(id);
+    if (state.unlocked > idx + 1) { box.innerHTML = ""; return; }
+    const gate = GATES[id] ? GATES[id]() : null;
+    box.innerHTML = `<button type="button" class="btn btn-primary" data-unlock="${idx + 1}" ${gate ? "disabled" : ""}>${s.next} <span aria-hidden="true">→</span></button>
+      ${gate ? `<p class="gate">${gate}</p>` : ""}`;
+  }
+
+  function unlock(n) {
+    if (n < state.unlocked) return;
+    state.unlocked = n + 1;
+    save();
+    const s = SECTIONS[n];
+    // Remove the "next" button on the previous section, add the new section.
+    renderNext(SECTIONS[n - 1].id);
+    els.sections.insertAdjacentHTML("beforeend", sectionShell(s));
+    renderSection(s.id, true);
+    renderNav();
+    const sec = $(`#ex-${s.id}`);
+    sec.scrollIntoView({ behavior: smooth(), block: "start" });
+    focusEl($(`#h-${s.id}`));
+  }
+
+  function renderSection(id, animate) {
+    const body = $(`#body-${id}`);
+    if (!body) return;
+    switch (id) {
+      case "connie": body.innerHTML = connieHTML(); bindVote(); addLedger(["box.seen", "ran.seen", "cash.seen", "door.seen"]); break;
+      case "rewind": body.innerHTML = rewindHTML(); break;
+      case "board": body.innerHTML = boardHTML(); observeBoard(); break;
+      case "spread": body.innerHTML = spreadHTML(); break;
+      case "theory": body.innerHTML = theoryHTML(); break;
+      case "ending": body.innerHTML = endingShellHTML(); renderEnding(false); break;
+    }
+    checkImages(body);
+    activateAudio(body);
+    renderNext(id);
+    if (animate) play(body);
+  }
+
+  /* ------------------------------------------------------------------ *
+   * Exhibit 1 — What Connie Saw                                        *
+   * ------------------------------------------------------------------ */
+  function connieHTML() {
+    const im = IMAGES.connie;
+    return `<div class="cluster">
+      <figure class="photo-pin pinned col-7 line" style="--i:0">
+        ${failedImages.has(im.src) ? artSlot("metalBox", im.alt, "frame") : `<img src="${im.src}" alt="${esc(im.alt)}" width="1376" height="768" data-fallback="metalBox">`}
+        <p class="scribble photo-note"><span class="sr-only">Rodney’s sticky note: </span>Villain angle. AGAIN.</p>
+        <figcaption>What Connie saw from the side door. 10:52 a.m.</figcaption>
+      </figure>
+      <div class="col-5 line" style="--i:1">${accountHTML("connie", 0).replace(' class="account line"', ' class="account pinned pin-navy"')}</div>
+      <div class="clipping torn pinned col-7 note-card line" style="--i:2">
+        <p class="clip-paper">Back inside · 10:58 a.m.</p>
+        <p class="clip-head">Two Things Missing</p>
+        <p>The fundraiser’s cash box wasn’t in its usual spot beside the register. And the side door to the alley had fresh gouges around the latch.</p>
+        <p>Connie wasn’t trying to be unfair. She remembered the Bones of Rath, the things that went missing back then, and the excuses that came after. When a stove has burned you more than once, you stop testing whether it’s hot.</p>
+        <p class="say"><span class="who">Connie</span><span class="q">“I know what I saw.”</span></p>
+        <p>She did. She just didn’t know yet which parts she’d seen and which parts she’d filled in.</p>
+      </div>
+      <div class="col-5 line" style="--i:3">${voteHTML()}</div>
+    </div>`;
+  }
+
+  function voteHTML() {
     if (state.vote) {
       const opt = VOTE.options.find((o) => o[0] === state.vote);
-      return `<div class="vote line" style="--i:2"><p class="sealed">Your first impression: <strong>“${opt[1]}.”</strong></p><p class="response">${opt[2]}</p><p class="private">Private. Only you can see this, and it stays on this device.</p></div>`;
+      return `<div class="paper vote pinned"><p class="sealed" id="sealed">Your first impression: <strong>“${opt[1]}.”</strong></p><p class="response">${opt[2]}</p><p class="private" style="margin:12px 0 0">Private. Only you can see this. It stays on this device.</p></div>`;
     }
-    return `<form class="vote line" style="--i:2" id="vote-form" novalidate>
+    return `<form class="paper vote pinned" id="vote-form" novalidate>
       <fieldset>
         <legend>${VOTE.question}</legend>
         <p class="private">Private. Nobody else sees your answer. It stays on this device, and the case file hands it back to you at the end.</p>
         ${VOTE.options.map((o) => `<label class="choice"><input type="radio" name="vote" value="${o[0]}"> <span>${o[1]}</span></label>`).join("")}
       </fieldset>
-      <button type="submit" class="btn btn-primary">Seal my answer</button>
-      <p class="gate-hint" id="vote-hint" aria-live="polite"></p>
+      <button type="submit" class="btn btn-red">Seal my answer</button>
+      <p class="hint" id="vote-hint" aria-live="polite"></p>
     </form>`;
-  };
+  }
 
+  function bindVote() {
+    const form = $("#vote-form");
+    if (!form) return;
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const v = form.querySelector("input[name=vote]:checked");
+      if (!v) { $("#vote-hint").textContent = "Pick one first. It stays private."; form.querySelector("input").focus(); return; }
+      state.vote = v.value;
+      save();
+      form.outerHTML = voteHTML();
+      renderNext("connie");
+      focusEl($("#sealed"));
+    });
+  }
+
+  /* ------------------------------------------------------------------ *
+   * Exhibit 2 — The Missing Ten Minutes                                *
+   * ------------------------------------------------------------------ */
+  const fmt = (mins) => `10:${String(mins).padStart(2, "0")}`;
+  function rewindHTML() {
+    const rewound = state.tape >= 0;
+    const f = rewound ? TAPE[state.tape] : null;
+    const counter = rewound ? f.time : "10:52";
+    const dots = TAPE.map((_, k) => `<span class="${rewound && k <= state.tape ? "on" : ""}"></span>`).join("");
+    const controls = rewound
+      ? `<button type="button" class="btn btn-small" data-tape="prev" ${state.tape === 0 ? "disabled" : ""}><span aria-hidden="true">◀</span> Back</button>
+         <button type="button" class="btn btn-small btn-red" data-tape="next" ${state.tape === TAPE.length - 1 ? "disabled" : ""}>Play forward <span aria-hidden="true">▶</span></button>
+         <button type="button" class="btn btn-small" data-tape="rewind"><span aria-hidden="true">◀◀</span> Rewind again</button>`
+      : `<button type="button" class="btn btn-red" data-tape="rewind"><span aria-hidden="true">◀◀</span> Rewind ten minutes</button>`;
+    let frame;
+    if (!rewound) {
+      frame = `<p class="frame-time">Cued to 10:52</p>
+        <h3 id="frame-title" tabindex="-1">The Moment Everybody Saw</h3>
+        <p>The tape is cued to the ten seconds Connie saw: a crash, a gray metal box, and “Rodney!”</p>
+        <p class="hand">Rewind it. The good part is the ten minutes BEFORE that.</p>`;
+    } else {
+      let i = 0;
+      frame = `<p class="frame-time">${f.time} a.m. · Frame ${state.tape + 1} of ${TAPE.length}</p>
+        <h3 id="frame-title" tabindex="-1">${f.heading}</h3>`;
+      if (f.image) frame += imageFigure(f.image, i++);
+      else if (f.art) frame += drawingFigure(f.art, "", ART_ALT[f.art], i++);
+      frame += `<div class="blocks">${blocksHTML(f.blocks, i)}</div>`;
+      if (f.compare) frame += compareHTML(i + f.blocks.length);
+    }
+    return `<div class="deck" id="deck">
+      <div class="deck-top">
+        <div class="reels" aria-hidden="true"><span class="reel"></span><span class="reel"></span></div>
+        <p class="deck-label">Tape: Saturday, the alley behind Whit’s End</p>
+        <span class="counter" id="tape-counter" role="timer" aria-label="Tape counter">${counter}</span>
+      </div>
+      <div class="deck-controls" role="group" aria-label="Tape controls">${controls}</div>
+      <div class="frame-dots" aria-hidden="true" style="margin-top:12px">${dots}</div>
+      <div class="frame-wrap" id="frame-wrap" aria-live="off">${frame}</div>
+    </div>`;
+  }
+
+  let rewinding = false;
+  function tapeTo(k, focusTitle = true) {
+    state.tape = k;
+    state.tapeMax = Math.max(state.tapeMax, k);
+    save();
+    const body = $("#body-rewind");
+    body.innerHTML = rewindHTML();
+    checkImages(body);
+    activateAudio(body);
+    renderNext("rewind");
+    play($("#frame-wrap"));
+    if (focusTitle) {
+      const deck = $("#deck");
+      if (deck.getBoundingClientRect().top < 0) deck.scrollIntoView({ behavior: smooth(), block: "start" });
+      focusEl($("#frame-title"));
+    }
+  }
+  function rewindTape() {
+    if (rewinding) return;
+    const from = state.tape >= 0 ? Number(TAPE[state.tape].time.slice(3)) : 52;
+    const deck = $("#deck");
+    const counter = $("#tape-counter");
+    if (reduceMotion || from <= 42) { tapeTo(0); return; }
+    rewinding = true;
+    deck.classList.add("rewinding");
+    deck.querySelectorAll("[data-tape]").forEach((b) => { b.disabled = true; });
+    const start = performance.now();
+    const dur = 1100;
+    const step = (t) => {
+      const p = Math.min(1, (t - start) / dur);
+      counter.textContent = fmt(Math.round(from - (from - 42) * p));
+      if (p < 1) requestAnimationFrame(step);
+      else { rewinding = false; tapeTo(0); }
+    };
+    requestAnimationFrame(step);
+  }
+
+  /* ------------------------------------------------------------------ *
+   * Exhibit 3 — The Board                                              *
+   * ------------------------------------------------------------------ */
   const cardOpen = new Set(state.cards);
-  const cardLocked = (c) => (c.requires || []).some((r) => !has(state.cards, r));
-
-  const cardHTML = (c) => {
-    const locked = cardLocked(c);
+  function cardHTML(c) {
     const examined = has(state.cards, c.id);
     const open = examined && cardOpen.has(c.id);
-    let pic = "";
-    if (c.image) {
-      const im = IMAGES[c.image];
-      pic = failedImages.has(im.src)
-        ? `<div class="mini" role="img" aria-label="${esc(ART_ALT[im.fallback])}">${drawing(im.fallback)}</div>`
-        : `<div class="mini-wrap"><img class="mini-photo" src="${im.src}" alt="${esc(im.alt)}" width="1376" height="768" loading="lazy" data-fallback="${im.fallback}"></div>`;
-    } else if (c.art) {
-      pic = artSlot(c.art, ART_ALT[c.art], "mini");
-    }
-    return `<li class="card ${c.kind}${examined ? " examined" : ""}">
+    return `<li class="card${examined ? " examined" : ""}" data-pin="${c.id}">
+      <span class="pin-dot" aria-hidden="true" data-anchor="pin-${c.id}"></span>
       <p class="card-kind">${c.label}</p>
       <h3>${c.title}</h3>
-      ${pic}
-      <p class="card-prompt">${c.prompt}</p>
-      ${locked
-        ? `<button type="button" class="btn btn-small" disabled>Locked</button><p class="card-lock">${c.lockText}</p>`
-        : `<button type="button" class="btn btn-small" data-card="${c.id}" aria-expanded="${open}" aria-controls="card-${c.id}">${open ? "Close card" : examined ? "Reopen card" : c.action}</button>`}
-      <div class="card-reveal" id="card-${c.id}" ${open ? "" : "hidden"}>${blocksHTML(c.reveal).replace(/ class="line/g, ' class="')}</div>
+      <p class="claim"><span class="sr-only">Rodney’s note: </span>${c.claim}</p>
+      ${c.tag ? `<p class="evtag" data-anchor="${c.tag[0]}">${c.tag[1]}</p>` : ""}
+      ${artSlot(c.art, ART_ALT[c.art], "mini")}
+      <button type="button" class="btn btn-small" data-card="${c.id}" aria-expanded="${open}" aria-controls="card-${c.id}">${open ? "Close card" : examined ? "Reopen card" : c.action}</button>
+      <div class="card-reveal" id="card-${c.id}" ${open ? "" : "hidden"}>
+        ${blocksHTML(c.reveal).replace(/ class="line/g, ' class="')}
+        <p class="establishes"><strong>What this actually establishes</strong>${c.establishes}</p>
+      </div>
     </li>`;
-  };
-
-  const boardHTML = () => {
+  }
+  const connSolved = (cn) => cn.need.every((id) => has(state.cards, id));
+  function connectionsHTML() {
+    return `<div class="paper connections pinned pin-navy">
+      <h3>Rodney’s Red Strings</h3>
+      <p class="private" style="margin:0">Each red string is one of Rodney’s theories. Open the cards it touches to test it.</p>
+      <ol>${CONNECTIONS.map((cn) => {
+        const solved = connSolved(cn);
+        return `<li class="${solved ? "solved" : ""}">
+          <span class="ends">${solved && cn.endsSolved ? cn.endsSolved : cn.ends}</span>
+          <span class="theory"><span class="sr-only">Rodney’s theory: </span>${cn.theory}</span>
+          ${solved ? `<span class="truth"><strong>Actually:</strong> ${cn.truth}</span>` : `<span class="pending">Open ${cn.need.map((id) => cardTitle(id).replace(/^The /, "the ")).join(" and ")} to test it.</span>`}
+        </li>`;
+      }).join("")}</ol>
+    </div>`;
+  }
+  function boardHTML() {
     const n = state.cards.length;
-    return `<div class="board line" style="--i:1" id="board">
-      <p class="board-count" id="board-count" aria-live="polite">${n} of ${CARDS.length} examined${n === CARDS.length ? ". The defense is ready." : "."}</p>
-      <ul class="cards">${CARDS.map(cardHTML).join("")}</ul>
-    </div>`;
-  };
-
-  const reviewHTML = (i) => {
-    const first = state.vote
-      ? `<p class="sealed">Before you heard Rodney’s side, you said he was holding: <strong>“${voteLabel(state.vote)}.”</strong></p>`
-      : `<p class="sealed">You didn’t record a first impression. The case went on without you, which is how most of Odyssey found out about it too.</p>`;
-    const chosen = DETAILS.find((d) => d[0] === state.detail);
-    return `<section class="review line" style="--i:${i}" aria-labelledby="review-h">
-      <h3 id="review-h" class="sr-only">Your first impression</h3>
-      ${first}
-      <form id="detail-form" novalidate>
-        <fieldset>
-          <legend>${reviewQuestion(state.vote)}</legend>
-          <p class="private">Also private. Pick the one that mattered most.</p>
-          ${DETAILS.map((d) => `<label class="choice"><input type="radio" name="detail" value="${d[0]}" ${state.detail === d[0] ? "checked" : ""}> <span>${d[1]}</span></label>`).join("")}
-        </fieldset>
-        <button type="submit" class="btn">Note it in the file</button>
-        <p class="response" id="detail-response" aria-live="polite">${chosen ? chosen[2] : ""}</p>
-      </form>
-      <div class="account-replay">
-        <button type="button" class="btn btn-quiet" id="replay-accounts" aria-expanded="false" aria-controls="accounts-again">↺ Replay both accounts</button>
-        <button type="button" class="btn btn-quiet" data-goto="5,0">Skip the closing argument →</button>
+    return `<p class="board-count" id="board-count" aria-live="polite">${n === CARDS.length ? "All four examined. Huh." : `${n} of ${CARDS.length} examined. Follow the string.`}</p>
+      <div class="board" id="board">
+        <svg class="strings back" id="strings" aria-hidden="true"></svg>
+        <svg class="strings front" id="strings-front" aria-hidden="true"></svg>
+        <ul class="cards">${CARDS.map(cardHTML).join("")}</ul>
       </div>
-      <div id="accounts-again" hidden></div>
-    </section>`;
-  };
-
-  const closingHTML = (i) => `
-    <div class="transcript line" style="--i:${i}">
-      <p class="transcript-head">${CLOSING.head}</p>
-      ${CLOSING.paras.map((p) => `<p>${p}</p>`).join("")}
-      ${CLOSING.tail.map((t) => t[0] === "typist" ? `<p class="typist">${t[1]}</p>` : `<p>${t[1]}</p>`).join("")}
-    </div>`;
-
-  const closedHTML = (i) => `
-    <p class="line" style="--i:${i}"><span class="stamp">Case Closed</span></p>
-    <div class="end-actions line" style="--i:${i + 1}">
-      <button type="button" class="btn" data-goto="0,0">Read it again from the top</button>
-      <button type="button" class="btn btn-quiet" data-goto="1,3">Replay both accounts</button>
-      <button type="button" class="btn btn-quiet" data-open-script>Read the audio script</button>
-    </div>`;
-
-  /* ------------------------------------------------------------------ *
-   * Main render                                                        *
-   * ------------------------------------------------------------------ */
-  const els = {};
-  const totalScenes = CHAPTERS.reduce((n, c) => n + c.scenes.length, 0);
-  const globalIndex = () => CHAPTERS.slice(0, state.ch).reduce((n, c) => n + c.scenes.length, 0) + state.sc;
-
-  function render(opts = {}) {
-    const chap = CHAPTERS[state.ch];
-    const scene = chap.scenes[state.sc];
-    addLedger(scene.ledger);
-    state.maxCh = Math.max(state.maxCh, state.ch);
-
-    let i = 0;
-    let html = `<div class="scene-meta">
-        <span class="file-label">File ${state.ch + 1} of ${CHAPTERS.length} · ${chap.title}</span>
-        <span>${scene.optional ? '<span class="optional-tag">Optional</span> ' : ""}<span class="timestamp">${scene.time}</span></span>
-      </div>
-      <h2 class="scene-title" id="scene-title" tabindex="-1">${scene.heading}</h2>`;
-    if (scene.image) html += imageFigure(scene.image, i++);
-    else if (scene.art) html += drawingFigure(scene.art, "", ART_ALT[scene.art], i++);
-    html += `<div class="blocks">${blocksHTML(scene.blocks, i)}</div>`;
-    i += scene.blocks.length;
-
-    switch (scene.interactive) {
-      case "vote": html += voteHTML(); break;
-      case "board": html += boardHTML(); break;
-      case "compare": html += compareHTML(i); break;
-      case "review": html += reviewHTML(i); break;
-      case "closing": html += closingHTML(i); break;
-      case "closed": html += closedHTML(i); break;
-    }
-
-    els.stage.innerHTML = html;
-    checkImages(els.stage);
-    activateAudio(els.stage);
-    bindScene(scene);
-    renderTabs();
-    renderControls(scene);
-    renderSidebar();
-    play();
-    save();
-
-    if (opts.focus) {
-      const h = $("#scene-title");
-      els.stage.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
-      h.focus({ preventScroll: true });
-    }
-  }
-
-  function play() {
-    els.stage.classList.remove("play");
-    void els.stage.offsetWidth; // restart CSS animations
-    els.stage.classList.add("play");
-  }
-
-  function renderTabs() {
-    els.tabs.innerHTML = CHAPTERS.map((c, k) => {
-      const cur = k === state.ch;
-      const locked = k > state.maxCh;
-      const done = k < state.maxCh;
-      return `<li><button type="button" data-ch="${k}" ${cur ? 'aria-current="step"' : ""} ${locked ? "disabled" : ""} aria-label="File ${k + 1}: ${c.title}${locked ? " (not opened yet)" : done ? " (read)" : ""}">
-        <span class="num">${k + 1}</span>${c.short}${done ? '<span class="done" aria-hidden="true">✓</span>' : ""}</button></li>`;
-    }).join("");
-  }
-
-  function nextTarget() {
-    const chap = CHAPTERS[state.ch];
-    if (state.sc < chap.scenes.length - 1) return [state.ch, state.sc + 1];
-    if (state.ch < CHAPTERS.length - 1) return [state.ch + 1, 0];
-    return null;
-  }
-  function prevTarget() {
-    if (state.sc > 0) return [state.ch, state.sc - 1];
-    if (state.ch > 0) return [state.ch - 1, CHAPTERS[state.ch - 1].scenes.length - 1];
-    return null;
-  }
-
-  function renderControls(scene) {
-    const n = nextTarget();
-    const p = prevTarget();
-    els.prev.disabled = !p;
-    const gated = scene.interactive === "vote" && !state.vote;
-    els.next.disabled = !n || gated;
-    if (!n) {
-      els.next.innerHTML = "The End";
-    } else if (n[0] !== state.ch) {
-      els.next.innerHTML = `Next file: ${CHAPTERS[n[0]].short} <span aria-hidden="true">→</span>`;
-    } else if (CHAPTERS[n[0]].scenes[n[1]].optional) {
-      els.next.innerHTML = `Closing Argument (optional) <span aria-hidden="true">→</span>`;
-    } else {
-      els.next.innerHTML = `Next <span aria-hidden="true">→</span>`;
-    }
-    const chap = CHAPTERS[state.ch];
-    els.progressText.textContent = gated
-      ? "Seal your first impression to continue."
-      : `Scene ${state.sc + 1} of ${chap.scenes.length} in this file`;
-    els.progressFill.style.width = `${Math.round(((globalIndex() + 1) / totalScenes) * 100)}%`;
-  }
-
-  function renderSidebar() {
-    els.yourCall.innerHTML = state.vote
-      ? `<h3>Your First Impression</h3><p>Rodney was holding: <strong>“${voteLabel(state.vote)}.”</strong> <span class="pending">(Private.)</span></p>`
-      : "";
-    const rows = LEDGER.filter((r) => has(state.ledger, r.id + ".seen"));
-    const solved = rows.filter((r) => has(state.ledger, r.id + ".fact")).length;
-    els.ledgerSub.textContent = rows.length
-      ? `${solved} of ${LEDGER.length} assumptions tested against the evidence.`
-      : "Nothing on file yet. Keep reading.";
-    els.ledger.innerHTML = rows.map((r) => {
-      const isSolved = has(state.ledger, r.id + ".fact");
-      return `<li class="ledger-row${isSolved ? " solved" : ""}${freshLedger.has(r.id) ? " fresh" : ""}">
-        <dl>
-          <dt>Seen</dt><dd>${r.seen}</dd>
-          <dt>Assumed</dt><dd class="assumed">${r.assumed}</dd>
-          <dt>Evidence shows</dt><dd>${isSolved ? `<span class="fact">${r.fact}</span>` : '<span class="pending">Under investigation.</span>'}</dd>
-        </dl></li>`;
-    }).join("");
-    freshLedger.clear();
-  }
-
-  function go(ch, sc, focus = true) {
-    state.ch = ch; state.sc = sc;
-    render({ focus });
-  }
-  const next = () => { const t = nextTarget(); if (t && !els.next.disabled) go(t[0], t[1]); };
-  const prev = () => { const t = prevTarget(); if (t) go(t[0], t[1]); };
-
-  /* ------------------------------------------------------------------ *
-   * Scene bindings                                                     *
-   * ------------------------------------------------------------------ */
-  function bindScene(scene) {
-    if (scene.interactive === "vote") {
-      const form = $("#vote-form");
-      if (form) form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const v = form.querySelector("input[name=vote]:checked");
-        if (!v) { $("#vote-hint").textContent = "Pick one first. It stays private."; form.querySelector("input").focus(); return; }
-        state.vote = v.value;
-        render();
-        const sealed = els.stage.querySelector(".sealed");
-        if (sealed) { sealed.setAttribute("tabindex", "-1"); sealed.focus(); }
-      });
-    }
-    if (scene.interactive === "review") {
-      const form = $("#detail-form");
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const v = form.querySelector("input[name=detail]:checked");
-        const out = $("#detail-response");
-        if (!v) { out.textContent = "Pick the detail that mattered most."; return; }
-        state.detail = v.value; save();
-        out.textContent = DETAILS.find((d) => d[0] === v.value)[2];
-      });
-      const btn = $("#replay-accounts");
-      const box = $("#accounts-again");
-      btn.addEventListener("click", () => {
-        const open = btn.getAttribute("aria-expanded") === "true";
-        if (open) {
-          box.hidden = true; box.innerHTML = "";
-          btn.setAttribute("aria-expanded", "false");
-          btn.textContent = "↺ Replay both accounts";
-        } else {
-          box.innerHTML = `<div class="play">${compareHTML(0)}</div>`;
-          box.hidden = false;
-          activateAudio(box);
-          btn.setAttribute("aria-expanded", "true");
-          btn.textContent = "Hide the accounts";
-          const first = box.querySelector(".account");
-          if (first) { first.setAttribute("tabindex", "-1"); first.focus(); }
-        }
-      });
-    }
+      <div id="connections">${connectionsHTML()}</div>`;
   }
 
   function toggleCard(id) {
     if (addTo(state.cards, id)) {
       cardOpen.add(id);
-      const card = CARDS.find((c) => c.id === id);
-      addLedger(card.ledger);
-    } else if (cardOpen.has(id)) {
-      cardOpen.delete(id);
-    } else {
-      cardOpen.add(id);
-    }
-    const board = $("#board");
-    const tmp = document.createElement("div");
-    tmp.innerHTML = boardHTML();
-    const fresh = tmp.firstElementChild;
-    fresh.classList.remove("line");
-    board.replaceWith(fresh);
-    checkImages(fresh);
-    renderSidebar();
+      addLedger(CARDS.find((c) => c.id === id).ledger);
+    } else if (cardOpen.has(id)) cardOpen.delete(id);
+    else cardOpen.add(id);
     save();
-    const btn = fresh.querySelector(`[data-card="${id}"]`);
-    if (btn) btn.focus();
+    const li = $(`li.card[data-pin="${id}"]`);
+    const tmp = document.createElement("ul");
+    tmp.innerHTML = cardHTML(CARDS.find((c) => c.id === id));
+    const fresh = tmp.firstElementChild;
+    li.replaceWith(fresh);
+    checkImages(fresh);
+    $("#connections").innerHTML = connectionsHTML();
+    const n = state.cards.length;
+    $("#board-count").textContent = n === CARDS.length ? "All four examined. Huh." : `${n} of ${CARDS.length} examined. Follow the string.`;
+    renderNext("board");
+    drawStrings(true);
+    focusEl(fresh.querySelector("[data-card]"));
+  }
+
+  /* Find where a string attaches. Falls back to the card's pin if the anchor is hidden. */
+  function anchorPoint(board, br, id) {
+    let el = board.querySelector(`[data-anchor="${id}"]`);
+    if (el && el.offsetParent === null) el = null;
+    if (!el) {
+      const hidden = board.querySelector(`[data-anchor="${id}"]`);
+      const card = hidden && hidden.closest("li.card");
+      el = card ? card.querySelector(".pin-dot") : null;
+    }
+    if (!el) return null;
+    const r = el.getBoundingClientRect();
+    const isTag = el.classList.contains("evtag");
+    return [(isTag ? r.left + 9 : r.left + r.width / 2) - br.left, r.top + r.height / 2 - br.top];
+  }
+  let prevPts = null;
+  let tweening = false;
+  function stringTargets() {
+    const board = $("#board");
+    const br = board.getBoundingClientRect();
+    return CONNECTIONS.map((cn) => {
+      const a = anchorPoint(board, br, cn.a);
+      const b = anchorPoint(board, br, connSolved(cn) && cn.bSolved ? cn.bSolved : cn.b);
+      return a && b ? [a[0], a[1], b[0], b[1]] : null;
+    });
+  }
+  /* Strings 2-4 run behind the cards (visible across the cork). String 1 and the number badges sit in front. */
+  function paintStrings(pts) {
+    const board = $("#board");
+    const back = $("#strings");
+    const front = $("#strings-front");
+    const br = board.getBoundingClientRect();
+    [back, front].forEach((svg) => {
+      svg.setAttribute("width", br.width);
+      svg.setAttribute("height", br.height);
+      svg.setAttribute("viewBox", `0 0 ${br.width} ${br.height}`);
+    });
+    const cards = [...board.querySelectorAll("li.card")].map((c) => {
+      const r = c.getBoundingClientRect();
+      return [r.left - br.left - 6, r.top - br.top - 6, r.right - br.left + 6, r.bottom - br.top + 6];
+    });
+    const onCard = (x, y) => cards.some((r) => x > r[0] && x < r[2] && y > r[1] && y < r[3]);
+    let backSvg = "", frontSvg = "", badges = "";
+    const used = [];
+    pts.forEach((p, k) => {
+      if (!p) return;
+      const [ax, ay, bx, by] = p;
+      const span = Math.hypot(bx - ax, by - ay);
+      const sag = Math.min(60, 18 + span * 0.12) + k * 4;
+      const cx = (ax + bx) / 2;
+      const cy = Math.max(ay, by) + sag;
+      const at = (t) => [
+        (1 - t) * (1 - t) * ax + 2 * (1 - t) * t * cx + t * t * bx,
+        (1 - t) * (1 - t) * ay + 2 * (1 - t) * t * cy + t * t * by,
+      ];
+      const cls = connSolved(CONNECTIONS[k]) ? "solved" : "";
+      const path = `<path class="${cls}" d="M${ax} ${ay} Q${cx} ${cy} ${bx} ${by}"/>`;
+      if (k === 0) frontSvg += path; else backSvg += path;
+      // Put the number badge on a stretch of string that isn't covered by a card.
+      const clear = ([x, y]) => !onCard(x, y) && used.every(([ux, uy]) => Math.hypot(ux - x, uy - y) > 26);
+      const spot = k === 0 ? at(0.5) : [0.5, 0.42, 0.58, 0.34, 0.66, 0.26, 0.74, 0.2, 0.8].map(at).find(clear);
+      if (spot) used.push(spot);
+      if (spot) badges += `<circle class="${cls}" cx="${spot[0]}" cy="${spot[1]}" r="11"/><text x="${spot[0]}" y="${spot[1]}">${k + 1}</text>`;
+    });
+    back.innerHTML = backSvg;
+    front.innerHTML = frontSvg + badges;
+  }
+  function drawStrings(animate = false) {
+    const board = $("#board");
+    const svg = $("#strings");
+    if (!board || !svg) return;
+    if (window.matchMedia("(max-width: 760px)").matches) { svg.innerHTML = ""; $("#strings-front").innerHTML = ""; prevPts = null; return; }
+    if (tweening) return;
+    const target = stringTargets();
+    if (!animate || reduceMotion || !prevPts) { paintStrings(target); prevPts = target; return; }
+    const from = prevPts;
+    const t0 = performance.now();
+    const dur = 750;
+    tweening = true;
+    const ease = (x) => 1 - Math.pow(1 - x, 3);
+    const frame = (now) => {
+      const p = ease(Math.min(1, (now - t0) / dur));
+      const to = stringTargets();
+      const pts = to.map((t, k) => (t && from[k] ? t.map((v, j) => from[k][j] + (v - from[k][j]) * p) : t));
+      paintStrings(pts);
+      if (p < 1) requestAnimationFrame(frame);
+      else { tweening = false; prevPts = to; }
+    };
+    requestAnimationFrame(frame);
+  }
+  let boardObserver = null;
+  function observeBoard() {
+    const board = $("#board");
+    if (!board) return;
+    if (boardObserver) boardObserver.disconnect();
+    if ("ResizeObserver" in window) {
+      boardObserver = new ResizeObserver(() => drawStrings(false));
+      boardObserver.observe(board);
+    }
+    requestAnimationFrame(drawStrings);
+  }
+
+  function ledgerHTML() {
+    const rows = LEDGER.filter((r) => has(state.ledger, r.id + ".seen"));
+    if (!rows.length) return { sub: "Nothing on file yet.", list: "" };
+    const solved = rows.filter((r) => has(state.ledger, r.id + ".fact")).length;
+    return {
+      sub: `${solved} of ${LEDGER.length} assumptions tested against the evidence.`,
+      list: rows.map((r) => {
+        const ok = has(state.ledger, r.id + ".fact");
+        return `<li class="ledger-row${ok ? " solved" : ""}"><dl>
+          <dt>Seen <span class="tagline">(a fact)</span></dt><dd>${r.seen}</dd>
+          <dt>Assumed <span class="tagline">(a guess)</span></dt><dd class="assumed">${r.assumed}</dd>
+          <dt>Evidence shows</dt><dd>${ok ? `<span class="fact">${r.fact}</span>` : '<span class="pending">Under investigation.</span>'}</dd>
+        </dl></li>`;
+      }).join(""),
+    };
+  }
+  function renderLedger() {
+    const h = ledgerHTML();
+    document.querySelectorAll("[data-ledger-list]").forEach((el) => { el.innerHTML = h.list; });
+    document.querySelectorAll("[data-ledger-sub]").forEach((el) => { el.textContent = h.sub; });
+    const solved = LEDGER.filter((r) => has(state.ledger, r.id + ".fact")).length;
+    const badge = $("#ledger-badge");
+    if (badge) badge.textContent = `${solved}/${LEDGER.length}`;
   }
 
   /* ------------------------------------------------------------------ *
-   * Images: fall back to drawings when a file is missing               *
+   * Exhibit 4 — How the Story Spread                                   *
+   * ------------------------------------------------------------------ */
+  function spreadHTML() {
+    const shown = SPREAD.slice(0, state.spread);
+    const done = state.spread >= SPREAD.length;
+    return `<ol class="chain" id="chain">${shown.map((n, k) => `
+        ${k > 0 ? '<li class="arrow" aria-hidden="true">↓ told to somebody else ↓</li>' : ""}
+        <li><div class="rumor pinned${k === 0 ? " pin-navy" : ""}"><q>${n[0]}</q><span class="who">${n[1]}</span></div></li>`).join("")}
+      </ol>
+      ${done
+        ? `<p class="sticky reply" id="reply"><span class="sr-only">Rodney’s handwritten reply: </span>Who? I’d like a ride home.</p>`
+        : `<div class="spread-actions"><button type="button" class="btn btn-red" id="pass-it-on">Pass it on <span aria-hidden="true">→</span></button></div>`}
+      <details class="clipping torn">
+        <summary>Clipping: Meanwhile, at the arcade…</summary>
+        <div class="blocks">${blocksHTML(ALIBI).replace(/ class="line/g, ' class="')}</div>
+      </details>`;
+  }
+  function passItOn() {
+    state.spread = Math.min(SPREAD.length, state.spread + 1);
+    save();
+    const body = $("#body-spread");
+    body.innerHTML = spreadHTML();
+    renderNext("spread");
+    const items = body.querySelectorAll(".chain .rumor");
+    const last = items[items.length - 1];
+    if (!reduceMotion) last.animate([{ opacity: 0, transform: "translateY(-8px)" }, { opacity: 1, transform: "none" }], { duration: 350, easing: "ease-out" });
+    const btn = $("#pass-it-on");
+    if (btn) btn.focus();
+    else focusEl($("#reply"));
+  }
+
+  /* ------------------------------------------------------------------ *
+   * Exhibit 5 — Rodney's Own Theory                                    *
+   * ------------------------------------------------------------------ */
+  function theoryHTML() {
+    const castMissing = failedImages.has(CAST_PHOTO.src);
+    const photo = castMissing
+      ? `<div class="cast-fallback">[Photo: everybody, smiling. Suspiciously.]</div>`
+      : `<img src="${CAST_PHOTO.src}" alt="${esc(CAST_PHOTO.alt)}" width="1376" height="768" data-hide-on-error="cast-fallback"><div class="cast-fallback" id="cast-fallback" hidden>[Photo: everybody, smiling. Suspiciously.]</div>`;
+    const stack = state.lifted
+      ? `<figure class="photo-pin pinned poster-pin" id="poster">
+           <img src="${POSTER.src}" alt="${esc(POSTER.alt)}" width="848" height="1264" data-hide-on-error="poster-fallback">
+           <div class="cast-fallback" id="poster-fallback" hidden>[A movie poster. You had to be there.]</div>
+           <figcaption>This is how they see me. (Okay, I made this one. It was a long lunch. Not evidence.)</figcaption>
+         </figure>
+         <p style="text-align:center;margin-top:14px"><button type="button" class="btn btn-small" id="put-back">Put the photo back</button></p>`
+      : `<div class="stack"><figure class="photo-pin pinned cast">${photo}</figure>
+           <button type="button" class="peek" id="peek" aria-label="Lift the photo. Something is pinned behind it.">something’s behind this →</button></div>`;
+    return `<div class="theory-board">
+      <div>${stack}</div>
+      <div class="theory-notes">
+        <p class="sticky"><span class="sr-only">Rodney’s handwritten note: </span>Everybody was in on it.</p>
+        <button type="button" class="btn btn-red" id="examine-theory" aria-expanded="${state.theory}" aria-controls="theory-reveal" ${state.theory ? "disabled" : ""}>${state.theory ? "Examined" : "Examine the exhibit"}</button>
+        <div id="theory-reveal" ${state.theory ? "" : "hidden"}>
+          <p class="sticky" style="transform:rotate(2.5deg);background:#fbf7ea"><span class="sr-only">A second note, in Rodney’s handwriting: </span>Fine. I have no evidence of this. Still a weird picture.</p>
+        </div>
+      </div>
+    </div>`;
+  }
+  function rerenderTheory(focusSel) {
+    const body = $("#body-theory");
+    body.innerHTML = theoryHTML();
+    checkImages(body);
+    renderNext("theory");
+    if (focusSel) focusEl($(focusSel));
+  }
+
+  /* ------------------------------------------------------------------ *
+   * The Ending                                                         *
+   * ------------------------------------------------------------------ */
+  function endingShellHTML() {
+    return `<div class="ending" id="ending">
+      <article class="ending-stage" id="ending-stage"></article>
+      <div class="controls" role="group" aria-label="Scene controls">
+        <button type="button" class="btn" id="end-prev"><span aria-hidden="true">←</span> Back</button>
+        <button type="button" class="btn" id="end-replay">↺ Replay scene</button>
+        <button type="button" class="btn btn-primary" id="end-next">Next <span aria-hidden="true">→</span></button>
+        <div class="progress"><span id="end-progress"></span><div class="progress-bar" aria-hidden="true"><span id="end-fill"></span></div></div>
+      </div>
+    </div>`;
+  }
+
+  function verdictExtrasHTML(i) {
+    const first = state.vote
+      ? `<p class="sealed">Your original guess, before you heard Rodney’s side: <strong>“${voteLabel(state.vote)}.”</strong></p>`
+      : `<p class="sealed">You didn’t record a first impression. The case went on without you, which is how most of Odyssey found out about it too.</p>`;
+    const chosen = DETAILS.find((d) => d[0] === state.detail);
+    return `<p class="line hand" style="--i:${i}">Verdict: not guilty. Also: hired.</p>
+      <section class="review line" style="--i:${i + 1};padding:20px 22px" aria-label="Your first impression">
+        ${first}
+        <form id="detail-form" novalidate style="margin-top:14px">
+          <fieldset>
+            <legend>${reviewQuestion(state.vote)}</legend>
+            <p class="private">Also private. Pick the one that mattered most.</p>
+            ${DETAILS.map((d) => `<label class="choice"><input type="radio" name="detail" value="${d[0]}" ${state.detail === d[0] ? "checked" : ""}> <span>${d[1]}</span></label>`).join("")}
+          </fieldset>
+          <button type="submit" class="btn">Note it in the file</button>
+          <p class="response" id="detail-response" aria-live="polite">${chosen ? chosen[2] : ""}</p>
+        </form>
+        <div class="account-replay">
+          <button type="button" class="btn" id="replay-accounts" aria-expanded="false" aria-controls="accounts-again">↺ Replay both accounts</button>
+        </div>
+        <div id="accounts-again" hidden></div>
+      </section>
+      <p class="line scribble last-line" style="--i:${i + 2}"><span class="sr-only">Rodney’s last handwritten note: </span>Turns out everybody was working off the same bad clue. Including me.</p>
+      <p class="line" style="--i:${i + 3}"><button type="button" class="btn-link" data-end="${LAST_INDEX}">Skip the closing argument and go to the epilogue →</button></p>`;
+  }
+
+  function closingHTML(i) {
+    return `<div class="transcript line" style="--i:${i}">
+      <p class="transcript-head">${CLOSING.head}</p>
+      ${CLOSING.paras.map((p) => `<p>${p}</p>`).join("")}
+      ${CLOSING.tail.map((t) => (t[0] === "typist" ? `<p class="typist">${t[1]}</p>` : `<p>${t[1]}</p>`)).join("")}
+    </div>`;
+  }
+
+  function endHTML(i) {
+    return `<div class="end-actions line" style="--i:${i}">
+      <button type="button" class="btn" id="read-again">Read the case again from the top</button>
+      <button type="button" class="btn" data-goto-section="board">Back to the board</button>
+      <button type="button" class="btn" data-open-script>Read the audio script</button>
+    </div>`;
+  }
+
+  function renderEnding(focus) {
+    const stage = $("#ending-stage");
+    if (!stage) return;
+    const sc = ENDING[state.end];
+    state.endMax = Math.max(state.endMax, state.end);
+    addLedger(sc.ledger);
+    let i = 0;
+    let html = `<div class="scene-meta"><span class="file-label">Scene ${state.end + 1} of ${ENDING.length}</span>
+      <span>${sc.optional ? '<span class="optional-tag">Optional</span>' : ""}<span class="timestamp">${sc.time}</span></span></div>
+      <h3 class="scene-title" id="scene-title" tabindex="-1">${sc.heading}</h3>`;
+    if (sc.image) html += imageFigure(sc.image, i++);
+    else if (sc.art) html += drawingFigure(sc.art, "", ART_ALT[sc.art], i++);
+    html += `<div class="blocks">${blocksHTML(sc.blocks, i)}</div>`;
+    i += sc.blocks.length;
+    if (sc.interactive === "verdict") html += verdictExtrasHTML(i);
+    if (sc.interactive === "closing") html += closingHTML(i);
+    if (sc.interactive === "end") html += endHTML(i);
+    stage.innerHTML = html;
+    checkImages(stage);
+    activateAudio(stage);
+    bindEndingScene(sc);
+
+    const prev = $("#end-prev"), next = $("#end-next");
+    prev.disabled = state.end === 0;
+    next.disabled = state.end === LAST_INDEX;
+    const label = state.end === LAST_INDEX ? "The End" : (sc.nextLabel || "Next");
+    next.innerHTML = `${label}${state.end === LAST_INDEX ? "" : ' <span aria-hidden="true">→</span>'}`;
+    $("#end-progress").textContent = `Scene ${state.end + 1} of ${ENDING.length}`;
+    $("#end-fill").style.width = `${Math.round(((state.end + 1) / ENDING.length) * 100)}%`;
+    applyQuiet();
+    save();
+    play(stage);
+    if (focus) {
+      $("#ending").scrollIntoView({ behavior: smooth(), block: "start" });
+      focusEl($("#scene-title"));
+    }
+  }
+  function endGo(k) {
+    state.end = Math.min(Math.max(0, k), LAST_INDEX);
+    renderEnding(true);
+  }
+  function applyQuiet() {
+    const quiet = state.unlocked === SECTIONS.length && state.end >= QUIET_FROM;
+    els.case.classList.toggle("quiet", quiet);
+  }
+
+  function bindEndingScene(sc) {
+    if (sc.interactive !== "verdict") return;
+    const form = $("#detail-form");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const v = form.querySelector("input[name=detail]:checked");
+      const out = $("#detail-response");
+      if (!v) { out.textContent = "Pick the detail that mattered most."; return; }
+      state.detail = v.value; save();
+      out.textContent = DETAILS.find((d) => d[0] === v.value)[2];
+    });
+    const btn = $("#replay-accounts");
+    const box = $("#accounts-again");
+    btn.addEventListener("click", () => {
+      const open = btn.getAttribute("aria-expanded") === "true";
+      if (open) {
+        box.hidden = true; box.innerHTML = "";
+        btn.setAttribute("aria-expanded", "false");
+        btn.textContent = "↺ Replay both accounts";
+      } else {
+        box.innerHTML = `<div class="play">${compareHTML(0)}</div>`;
+        box.hidden = false;
+        activateAudio(box);
+        btn.setAttribute("aria-expanded", "true");
+        btn.textContent = "Hide the accounts";
+        focusEl(box.querySelector(".account"));
+      }
+    });
+  }
+
+  /* ------------------------------------------------------------------ *
+   * Images: fall back when a file is missing                           *
    * ------------------------------------------------------------------ */
   function swapImage(img) {
     const src = img.getAttribute("src");
@@ -959,7 +1260,17 @@
       const holder = img.parentElement;
       const key = img.dataset.fallback;
       const wrap = document.createElement("div");
-      wrap.className = holder.classList.contains("mini-wrap") ? "mini" : holder.className;
+      if (holder.tagName === "FIGURE") {
+        // Image sits directly in a pinned figure: swap only the image.
+        wrap.className = "frame";
+        wrap.setAttribute("role", "img");
+        wrap.setAttribute("aria-label", img.alt);
+        wrap.innerHTML = drawing(key);
+        img.replaceWith(wrap);
+        holder.classList.add("drawing");
+        return;
+      }
+      wrap.className = holder.className;
       wrap.setAttribute("role", "img");
       wrap.setAttribute("aria-label", img.alt);
       wrap.innerHTML = drawing(key);
@@ -968,7 +1279,7 @@
       if (fig) fig.classList.add("drawing");
     } else if (img.hasAttribute("data-remove-on-error")) {
       const fig = img.closest("figure");
-      if (fig) fig.remove();
+      if (fig) fig.remove(); else img.remove();
     } else if (img.dataset.hideOnError) {
       img.hidden = true;
       const alt = document.getElementById(img.dataset.hideOnError);
@@ -976,7 +1287,11 @@
     }
   }
   document.addEventListener("error", (e) => {
-    if (e.target instanceof HTMLImageElement && (e.target.dataset.fallback || e.target.dataset.hideOnError || e.target.hasAttribute("data-remove-on-error"))) swapImage(e.target);
+    const t = e.target;
+    if (t instanceof HTMLImageElement && (t.dataset.fallback || t.dataset.hideOnError || t.hasAttribute("data-remove-on-error"))) swapImage(t);
+  }, true);
+  document.addEventListener("load", (e) => {
+    if (e.target instanceof HTMLImageElement && e.target.closest("#board")) drawStrings(false);
   }, true);
   function checkImages(root) {
     root.querySelectorAll("img[data-fallback], img[data-hide-on-error], img[data-remove-on-error]").forEach((img) => {
@@ -1005,11 +1320,10 @@
     const buttons = [...root.querySelectorAll("button[data-audio]")];
     return Promise.all(buttons.map((b) => probe(b.dataset.audio).then((ok) => { if (ok) b.hidden = false; return ok; })));
   }
-
   const player = new Audio();
   let playingBtn = null;
   const setPlaying = (btn, on) => {
-    if (!btn) return;
+    if (!btn || !btn.isConnected) return;
     btn.querySelector(".ico").textContent = on ? "❚❚" : "▶";
     btn.querySelector(".lbl").textContent = `${on ? "Pause" : "Play"} ${btn.dataset.label}`;
   };
@@ -1047,7 +1361,7 @@
         <label class="choice" id="transcript-toggle-wrap" hidden style="margin:0"><input type="checkbox" id="transcript-toggle" checked> <span>Show transcript</span></label>
         ${audioButton(S.full, "the full episode")}
       </div>
-      <dl class="cast">${S.cast.map((c) => `<dt>${c[0]}</dt><dd>${c[1]}</dd>`).join("")}</dl>
+      <dl class="cast-list">${S.cast.map((c) => `<dt>${c[0]}</dt><dd>${c[1] || "&nbsp;"}</dd>`).join("")}</dl>
       ${S.scenes.map((sc) => `
         <section class="script-scene" aria-labelledby="ss-${sc.id}">
           <div class="script-scene-head"><h3 id="ss-${sc.id}">${sc.title}</h3>${audioButton(sc.audio, sc.short || sc.title)}</div>
@@ -1064,7 +1378,6 @@
       $("#script-panel").classList.toggle("hide-transcript", !e.target.checked);
     });
   }
-
   function openScript() {
     const btn = $("#script-toggle");
     const body = $("#script-body");
@@ -1073,7 +1386,7 @@
       btn.setAttribute("aria-expanded", "true");
       btn.textContent = "Hide the script";
     }
-    $("#script-section").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+    $("#script-section").scrollIntoView({ behavior: smooth(), block: "start" });
     $("#script-heading").focus({ preventScroll: true });
   }
 
@@ -1081,52 +1394,95 @@
    * Init                                                               *
    * ------------------------------------------------------------------ */
   function openCase() {
-    els.case.hidden = false;
-    render({ focus: true });
+    const first = els.case.hidden;
+    const front = $("#frontpage");
+    const reveal = () => {
+      els.case.hidden = false;
+      if (first) renderSections();
+      renderLedger();
+      const target = state.unlocked > 1 ? SECTIONS[state.unlocked - 1].id : null;
+      if (target) {
+        $(`#ex-${target}`).scrollIntoView({ behavior: "auto", block: "start" });
+        focusEl($(`#h-${target}`));
+      } else {
+        els.case.scrollIntoView({ behavior: "auto", block: "start" });
+        focusEl($("#board-title"));
+      }
+    };
+    if (!first || reduceMotion) { reveal(); if (!reduceMotion) return; else return; }
+    // The front page folds down into a clipping, then the board appears with it pinned up.
+    front.classList.add("handoff");
+    setTimeout(() => {
+      reveal();
+      const clip = $("#exhibit-a");
+      if (clip) clip.classList.add("pin-in");
+    }, 650);
   }
 
   function init() {
     els.case = $("#case");
-    els.stage = $("#stage");
-    els.tabs = $("#file-tabs");
-    els.prev = $("#prev");
-    els.next = $("#next");
-    els.replay = $("#replay");
-    els.progressText = $("#progress-text");
-    els.progressFill = $("#progress-fill");
-    els.yourCall = $("#your-call");
-    els.ledger = $("#ledger-list");
-    els.ledgerSub = $("#ledger-sub");
+    els.sections = $("#case-sections");
+    els.nav = $("#case-nav");
 
     checkImages(document);
-
-    if (saved && (saved.ch > 0 || saved.sc > 0)) $("#resume-note").hidden = false;
+    if (saved && state.unlocked > 1) $("#resume-note").hidden = false;
 
     $("#open-case").addEventListener("click", openCase);
-    els.next.addEventListener("click", next);
-    els.prev.addEventListener("click", prev);
-    els.replay.addEventListener("click", () => { play(); $("#scene-title").focus(); });
+    const dlg = $("#ledger-dialog");
+    $("#ledger-open").addEventListener("click", () => {
+      renderLedger();
+      if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
+    });
+    $("#ledger-close").addEventListener("click", () => { if (dlg.close) dlg.close(); else dlg.removeAttribute("open"); });
+    dlg.addEventListener("click", (e) => { if (e.target === dlg && dlg.close) dlg.close(); });
     $("#restart").addEventListener("click", () => {
       if (!window.confirm("Start the case over? Your sealed first impression and notes will be cleared.")) return;
       state = fresh();
       cardOpen.clear();
       save();
-      render({ focus: true });
-    });
-
-    els.tabs.addEventListener("click", (e) => {
-      const b = e.target.closest("button[data-ch]");
-      if (b && !b.disabled) go(Number(b.dataset.ch), 0);
+      renderSections();
+      renderLedger();
+      els.case.hidden = true;
+      $("#frontpage").classList.remove("handoff");
+      $("#frontpage").scrollIntoView({ behavior: "auto" });
+      $("#open-case").focus({ preventScroll: true });
     });
 
     document.addEventListener("click", (e) => {
-      const audio = e.target.closest("button[data-audio]");
+      const t = e.target;
+      const audio = t.closest("button[data-audio]");
       if (audio) { toggleAudio(audio); return; }
-      const card = e.target.closest("button[data-card]");
+      const card = t.closest("button[data-card]");
       if (card) { toggleCard(card.dataset.card); return; }
-      const g = e.target.closest("[data-goto]");
-      if (g) { const [c, s] = g.dataset.goto.split(",").map(Number); go(c, s); return; }
-      if (e.target.closest("[data-open-script]")) openScript();
+      const un = t.closest("button[data-unlock]");
+      if (un) { unlock(Number(un.dataset.unlock)); return; }
+      const tape = t.closest("button[data-tape]");
+      if (tape) {
+        const a = tape.dataset.tape;
+        if (a === "rewind") rewindTape();
+        else if (a === "next") tapeTo(Math.min(TAPE.length - 1, state.tape + 1));
+        else if (a === "prev") tapeTo(Math.max(0, state.tape - 1));
+        return;
+      }
+      if (t.closest("#pass-it-on")) { passItOn(); return; }
+      if (t.closest("#examine-theory")) { state.theory = true; save(); rerenderTheory("#theory-reveal .sticky"); return; }
+      if (t.closest("#peek")) { state.lifted = true; save(); rerenderTheory("#poster figcaption"); return; }
+      if (t.closest("#put-back")) { state.lifted = false; save(); rerenderTheory("#peek"); return; }
+      if (t.closest("#end-next")) { endGo(state.end + 1); return; }
+      if (t.closest("#end-prev")) { endGo(state.end - 1); return; }
+      if (t.closest("#end-replay")) { play($("#ending-stage")); focusEl($("#scene-title")); return; }
+      const ej = t.closest("[data-end]");
+      if (ej) { endGo(Number(ej.dataset.end)); return; }
+      const gs = t.closest("[data-goto-section]");
+      if (gs) { const id = gs.dataset.gotoSection; $(`#ex-${id}`).scrollIntoView({ behavior: smooth(), block: "start" }); focusEl($(`#h-${id}`)); return; }
+      if (t.closest("#read-again")) {
+        state.end = 0; save(); applyQuiet();
+        renderEnding(false);
+        $("#ex-connie").scrollIntoView({ behavior: smooth(), block: "start" });
+        focusEl($("#h-connie"));
+        return;
+      }
+      if (t.closest("[data-open-script]")) openScript();
     });
 
     const scriptBtn = $("#script-toggle");
@@ -1139,13 +1495,24 @@
     });
     renderScript();
 
+    // Arrow keys step through the tape or the ending when focus is inside them.
     document.addEventListener("keydown", (e) => {
-      if (els.case.hidden || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
       const t = e.target;
-      if (t.closest && (t.closest("input, textarea, select, [contenteditable]") || t.closest("#script-section"))) return;
-      if (e.key === "ArrowRight") { if (!els.next.disabled) { e.preventDefault(); next(); } }
-      else if (e.key === "ArrowLeft") { if (!els.prev.disabled) { e.preventDefault(); prev(); } }
+      if (t.closest("input, textarea, select, [contenteditable]")) return;
+      const fwd = e.key === "ArrowRight";
+      if (t.closest("#ending")) {
+        const k = state.end + (fwd ? 1 : -1);
+        if (k >= 0 && k <= LAST_INDEX) { e.preventDefault(); endGo(k); }
+      } else if (t.closest("#deck") && state.tape >= 0 && !rewinding) {
+        const k = state.tape + (fwd ? 1 : -1);
+        if (k >= 0 && k < TAPE.length) { e.preventDefault(); tapeTo(k); }
+      }
     });
+
+    let rt;
+    window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => drawStrings(false), 120); });
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
