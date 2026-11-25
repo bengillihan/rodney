@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rodney Rathbone for the Defense</title>
+  <meta name="description" content="An unofficial Adventures in Odyssey fan story told as a case file. What did everybody actually see, and what did they assume because it was Rodney?">
+  <meta name="theme-color" content="#f5ecd7">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Special+Elite&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="images/icon.png">
+  <link rel="apple-touch-icon" href="images/icon.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#case">Skip to the case file</a>
+
+  <header class="masthead">
+    <div class="wrap">
+      <div class="flag-row">
+        <span>Saturday Edition</span>
+        <p class="flag">The Odyssey Ledger</p>
+        <span>Price: One Brownie</span>
+      </div>
+      <div class="dateline">
+        <span>Whit’s End Fundraiser Special</span>
+        <span aria-hidden="true">✦</span>
+        <span>An Unofficial Fan Story</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero wrap" aria-labelledby="headline">
+      <div class="hero-text">
+        <img class="logo" src="images/logo.png" alt="Rodney Rathbone for the Defense" width="1280" height="853" data-hide-on-error="series-text">
+        <p class="series" id="series-text" hidden>Rodney Rathbone for the Defense</p>
+        <h1 id="headline">Everybody Saw Rodney</h1>
+        <p class="teaser">Connie heard a crash. She saw Rodney running with a metal box. By lunchtime, half of Odyssey knew what happened. The other half heard it from the first half.</p>
+        <p class="question">The question before the court: <em>What did everybody actually see, and what did they assume because it was Rodney?</em></p>
+        <div class="hero-actions">
+          <button type="button" class="btn btn-primary" id="open-case">Open the Case</button>
+          <button type="button" class="btn-link" data-open-script>Prefer it as an audio drama? Read the Script</button>
+        </div>
+        <p class="resume-note" id="resume-note" hidden>Your case file is right where you left it.</p>
+      </div>
+      <figure class="hero-art">
+        <div class="photo"><img src="images/01-connie-sees-rodney.jpg" alt="From the side door of Whit’s End, Connie watches Rodney run down the alley with a gray metal box under his arm." width="1376" height="768" data-fallback="metalBox"></div>
+        <figcaption>Witnesses describe “a metal box. Gray. With a handle.” Police were not called. Everyone else was.</figcaption>
+      </figure>
+    </section>
+
+    <section id="case" class="case wrap" aria-labelledby="case-heading" hidden>
+      <h2 id="case-heading" class="sr-only">The case file</h2>
+      <div class="folder">
+        <nav class="tabs-nav" aria-label="Case files">
+          <ol class="tabs" id="file-tabs"></ol>
+        </nav>
+
+        <div class="sheet">
+          <div class="sheet-grid">
+            <article class="stage" id="stage" aria-live="off"></article>
+
+            <aside class="sidebar" aria-labelledby="ledger-heading">
+              <div class="your-call" id="your-call"></div>
+              <section class="ledger">
+                <h3 id="ledger-heading">Seen vs. Assumed</h3>
+                <p class="ledger-sub" id="ledger-sub">Nothing on file yet.</p>
+                <ol class="ledger-list" id="ledger-list"></ol>
+              </section>
+              <button type="button" class="btn-link" id="restart">Start the case over</button>
+            </aside>
+          </div>
+
+          <div class="controls" role="group" aria-label="Scene controls">
+            <button type="button" class="btn" id="prev"><span aria-hidden="true">←</span> Back</button>
+            <button type="button" class="btn btn-quiet" id="replay">↺ Replay scene</button>
+            <button type="button" class="btn btn-primary" id="next">Next <span aria-hidden="true">→</span></button>
+            <div class="progress">
+              <p id="progress-text" class="progress-text"></p>
+              <div class="progress-bar" aria-hidden="true"><span id="progress-fill"></span></div>
+            </div>
+          </div>
+          <p class="key-hint">Tip: the <kbd>←</kbd> and <kbd>→</kbd> arrow keys move between scenes.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="script-section" class="script-section wrap" aria-labelledby="script-heading">
+      <div class="script-panel" id="script-panel">
+        <div class="script-head">
+          <div>
+            <h2 id="script-heading" tabindex="-1">Read the Script</h2>
+            <p>“Everybody Saw Rodney,” an original audio drama in seven short scenes. Contains spoilers, so open the case first.</p>
+          </div>
+          <button type="button" class="btn" id="script-toggle" aria-expanded="false" aria-controls="script-body">Show the script</button>
+        </div>
+        <div class="script-body" id="script-body" hidden></div>
+      </div>
+    </section>
+
+    <noscript>
+      <p class="wrap noscript">This case file needs JavaScript to open. The defense apologizes for the inconvenience.</p>
+    </noscript>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p><strong>Rodney Rathbone for the Defense</strong> is an unofficial fan story. It is not affiliated with, endorsed by, or produced by Adventures in Odyssey or Focus on the Family. The characters belong to their respective owners. The story, dialogue, and illustrations here are original.</p>
+    </div>
+  </footer>
+
+  <script src="audio-script.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

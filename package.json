@@ -1,0 +1,12 @@
+{
+  "name": "rodney-rathbone-for-the-defense",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An unofficial Adventures in Odyssey fan story, told as a case file.",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
