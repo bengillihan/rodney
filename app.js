@@ -128,10 +128,10 @@
       alt: "Rodney opens the metal box on the Whit’s End counter to show a tray of sockets and a ratchet while Connie leans in. A skateboard sits behind the counter.",
       caption: "",
     },
-    garage: {
-      src: "images/10-garage-bike.jpg", fallback: "socketSet",
-      alt: "At the open door of the Rathbones’ garage, the younger boy stands holding a blue bicycle while Rodney sets down his fishing pole and picks up the metal toolbox, smiling at him.",
-      caption: "The Rathbones’ garage. Three weeks later.",
+    epilogue: {
+      src: "images/10-bike-epilogue.jpg", fallback: "socketSet",
+      alt: "Toby stands with a blue bicycle at the Rathbones’ garage while Rodney picks up his toolbox beside a fishing pole.",
+      caption: "",
       note: "Fishing: postponed. Again. Worth it.",
     },
     map: {
@@ -496,7 +496,7 @@
       ],
     },
     {
-      time: "Three weeks later · The Rathbones’ garage", heading: "A Knock on the Garage Door", image: "garage", interactive: "end",
+      time: "Three weeks later · The Rathbones’ garage", heading: "A Knock on the Garage Door", image: "epilogue", interactive: "end",
       blocks: [
         ["p", "Saturday again. The reel on Rodney’s fishing pole finally clicked the way a reel is supposed to. The lake was waiting, and for once nobody in Odyssey was talking about him."],
         ["p", "Then Toby Pruitt came up the driveway, out of breath, walking a blue bike that wasn’t his. The chain dragged on the pavement."],

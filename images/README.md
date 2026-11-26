@@ -16,7 +16,7 @@ The site looks for these files. Any that are missing fall back to built-in drawi
 | `07-wrath-of-rath.jpg` | “The Wrath of Rath” movie poster (portrait) |
 | `08-cast-photo.jpg` | Corkboard cast photo with “You guys took the picture already?” |
 | `09-fishing-map.jpg` | Rodney’s hand-drawn route with the fishing spot scribbled out |
-| `10-garage-bike.jpg` | Epilogue: the boy with Lily’s bike, Rodney picking up the toolbox |
+| `10-bike-epilogue.jpg` | Epilogue: the boy with Lily’s bike, Rodney picking up the toolbox |
 | `icons/socket-set.png` | Spot icon: open toolbox (transparent PNG) |
 | `icons/cash-box.png` | Spot icon: closed cash box |
 | `icons/skateboard.png` | Spot icon: skateboard |
