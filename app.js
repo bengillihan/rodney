@@ -135,7 +135,7 @@
       note: "Fishing: postponed. Again. Worth it.",
     },
     map: {
-      src: "images/09-fishing-map.jpg", fallback: "fishingPole",
+      src: "images/09-fishing-map.jpg", fallback: "fishingPole", w: 1600, h: 1195,
       alt: "A hand-drawn map on notebook paper pinned to the corkboard: a dotted route from the Rathbones’ garage past Whit’s End and along a river to a fishing spot that has been completely scribbled out in black ink.",
       caption: "Rodney’s route. Fishing spot classified.",
       note: "Does this look like a getaway plan? It’s a LAKE.",
@@ -486,7 +486,7 @@
         ["say", "Rodney", "Before I touch this, can we get a witness?"],
         ["p", "Connie laughed for the first time all day."],
         ["say", "Connie", "I’ll stand right here."],
-        ["stamp", "Case Closed"],
+        ["stamp", "Case Closed", "images/case-closed.png"],
       ],
     },
     {
@@ -583,7 +583,7 @@
   const artSlot = (key, alt, cls) => {
     const icon = ICONS[key];
     if (icon && !failedImages.has(icon)) {
-      return `<div class="${cls}"><img src="${icon}" alt="${esc(alt)}" width="480" height="420" loading="lazy" data-fallback="${key}"></div>`;
+      return `<div class="${cls}"><img src="${icon}" alt="${esc(alt)}" loading="lazy" data-fallback="${key}"></div>`;
     }
     return `<div class="${cls}" role="img" aria-label="${esc(alt)}">${drawing(key)}</div>`;
   };
@@ -594,7 +594,7 @@
     if (failedImages.has(im.src)) return im.fallback ? drawingFigure(im.fallback, im.caption, im.alt, i) : "";
     const onErr = im.fallback ? `data-fallback="${im.fallback}"` : "data-remove-on-error";
     const note = im.note ? `<p class="scribble photo-note"><span class="sr-only">Rodney’s sticky note: </span>${im.note}</p>` : "";
-    return `<figure class="art line" style="--i:${i}">${note}<div class="frame"><img src="${im.src}" alt="${esc(im.alt)}" width="1376" height="768" decoding="async" ${onErr}></div>${im.caption ? `<figcaption>${im.caption}</figcaption>` : ""}</figure>`;
+    return `<figure class="art line" style="--i:${i}">${note}<div class="frame"><img src="${im.src}" alt="${esc(im.alt)}" width="${im.w || 1376}" height="${im.h || 768}" decoding="async" ${onErr}></div>${im.caption ? `<figcaption>${im.caption}</figcaption>` : ""}</figure>`;
   };
 
   const audioButton = (src, label) =>
@@ -622,7 +622,11 @@
       case "note": return `<p class="line note" ${st}>${b[1]}</p>`;
       case "tag": return `<p class="evtag" data-anchor="${b[1]}">${b[2]}</p>`;
       case "hand": return `<p class="line hand" ${st}>${b[1]}</p>`;
-      case "stamp": return `<p class="line" ${st}><span class="stamp">${b[1]}</span></p>`;
+      case "stamp":
+        if (b[2] && !failedImages.has(b[2])) {
+          return `<p class="line stamp-wrap" ${st}><img class="stamp-img" src="${b[2]}" alt="${b[1]}" width="900" height="275" data-hide-on-error="stamp-text-${i}"><span class="stamp" id="stamp-text-${i}" hidden>${b[1]}</span></p>`;
+        }
+        return `<p class="line" ${st}><span class="stamp">${b[1]}</span></p>`;
       case "account": return accountHTML(b[1], i);
       case "photo": {
         const im = IMAGES[b[1]];
