@@ -128,6 +128,12 @@
       alt: "Rodney opens the metal box on the Whit’s End counter to show a tray of sockets and a ratchet while Connie leans in. A skateboard sits behind the counter.",
       caption: "",
     },
+    garage: {
+      src: "images/10-garage-bike.jpg", fallback: "socketSet",
+      alt: "At the open door of the Rathbones’ garage, the younger boy stands holding a blue bicycle while Rodney sets down his fishing pole and picks up the metal toolbox, smiling at him.",
+      caption: "The Rathbones’ garage. Three weeks later.",
+      note: "Fishing: postponed. Again. Worth it.",
+    },
     map: {
       src: "images/09-fishing-map.jpg", fallback: "fishingPole",
       alt: "A hand-drawn map on notebook paper pinned to the corkboard: a dotted route from the Rathbones’ garage past Whit’s End and along a river to a fishing spot that has been completely scribbled out in black ink.",
@@ -490,11 +496,11 @@
       ],
     },
     {
-      time: "Three weeks later · The Rathbones’ garage", heading: "A Knock on the Garage Door", art: "socketSet", interactive: "end",
+      time: "Three weeks later · The Rathbones’ garage", heading: "A Knock on the Garage Door", image: "garage", interactive: "end",
       blocks: [
         ["p", "Saturday again. The reel on Rodney’s fishing pole finally clicked the way a reel is supposed to. The lake was waiting, and for once nobody in Odyssey was talking about him."],
-        ["p", "Then Toby Pruitt came running up the driveway, out of breath, with his skateboard under one arm."],
-        ["say", "Toby", "I knocked over Lily Okafor’s bike with my board. The fender’s all bent and the chain came off. She doesn’t know yet."],
+        ["p", "Then Toby Pruitt came up the driveway, out of breath, walking a blue bike that wasn’t his. The chain dragged on the pavement."],
+        ["say", "Toby", "It’s Lily Okafor’s. I knocked it over with my board in front of her house. The fender’s bent and the chain came off. She doesn’t know yet."],
         ["beat"],
         ["say", "Toby", "Will you come with me while I tell her?"],
         ["p", "Rodney looked at the fishing pole. He looked at the blue, lake-shaped Saturday he had planned."],

@@ -128,8 +128,8 @@ window.AUDIO_SCRIPT = {
       audio: "audio/07-epilogue.mp3",
       cues: [
         ["sfx", "Weeks later. A garage. A small radio plays something gentle and original. A fishing reel clicks smoothly as it winds."],
-        ["sfx", "Running footsteps up a driveway. A knock on the garage door frame."],
-        ["line", "TOBY", "Rodney. I knocked over Lily Okafor’s bike with my board. The fender’s bent. She doesn’t know yet.", "out of breath"],
+        ["sfx", "A bike being walked up a driveway, its loose chain ticking and dragging. A knock on the garage door frame."],
+        ["line", "TOBY", "Rodney. This is Lily Okafor’s bike. I knocked it over with my board. The fender’s bent. She doesn’t know yet.", "out of breath"],
         ["sfx", "The reel stops clicking."],
         ["line", "TOBY", "Will you come with me while I tell her?"],
         ["sfx", "A fishing pole is leaned against a wall. The socket set’s latches snap shut."],
