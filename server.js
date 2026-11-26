@@ -14,6 +14,9 @@ const TYPES = {
 };
 const PUBLIC = new Set([".html", ".css", ".js", ".png", ".jpg", ".jpeg", ".webp", ".svg", ".ico", ".mp3", ".m4a", ".ogg", ".md", ".txt"]);
 const BLOCKED = new Set(["server.js", "package.json"]);
+// Cache-busting: index.html references styles.css?v=__BUILD__ etc. Each deploy gets a new id,
+// so CDN-cached copies of old CSS/JS are never paired with new HTML.
+const BUILD = (process.env.RAILWAY_GIT_COMMIT_SHA || Date.now().toString(36)).slice(0, 10);
 
 http.createServer((req, res) => {
   let rel;
@@ -34,6 +37,15 @@ http.createServer((req, res) => {
       "Cache-Control": ext === ".html" ? "no-cache" : "public, max-age=3600",
       "X-Content-Type-Options": "nosniff",
     };
+    if (path.relative(ROOT, file) === "index.html") {
+      fs.readFile(file, "utf8", (e, html) => {
+        if (e) { res.writeHead(500).end(); return; }
+        const body = Buffer.from(html.replace(/__BUILD__/g, BUILD));
+        headers["Content-Length"] = body.length;
+        res.writeHead(200, headers).end(req.method === "HEAD" ? undefined : body);
+      });
+      return;
+    }
     if (req.method === "HEAD") { res.writeHead(200, headers).end(); return; }
     res.writeHead(200, headers);
     fs.createReadStream(file).pipe(res);
