@@ -460,3 +460,10 @@ figure.art, .photo-pin { position: relative; }
 @media (max-width: 560px) { .ledger-btn .long { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); } .ledger-btn .short { display: inline; } }
 .stamp-img { width: min(100%, 360px); height: auto; transform: rotate(-4deg); margin: 6px 0 18px; }
 .play .stamp-img { animation: stampIn .5s cubic-bezier(.2, 1.6, .4, 1) both; animation-delay: calc(var(--i, 0) * 150ms); }
+
+/* ---------- Music toggle ---------- */
+.music-line { margin: 12px 0 0; font-size: .95rem; }
+.music-line .btn-link { min-height: 44px; }
+.music-btn { flex: none; appearance: none; border: 1px solid rgba(255,255,255,.45); border-radius: 3px; background: transparent; color: var(--paper); font-family: var(--type); font-size: .82rem; min-height: 40px; padding: 4px 10px; cursor: pointer; white-space: nowrap; }
+.music-btn:hover { background: rgba(255,255,255,.1); }
+.music-btn[aria-pressed="true"] { background: var(--paper); color: var(--ink); }

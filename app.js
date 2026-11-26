@@ -923,6 +923,7 @@
   function toggleCard(id) {
     if (addTo(state.cards, id)) {
       cardOpen.add(id);
+      if (window.RathMusic) window.RathMusic.stinger(id === "sockets");
       addLedger(CARDS.find((c) => c.id === id).ledger);
     } else if (cardOpen.has(id)) cardOpen.delete(id);
     else cardOpen.add(id);
@@ -1236,6 +1237,7 @@
   function applyQuiet() {
     const quiet = state.unlocked === SECTIONS.length && state.end >= QUIET_FROM;
     els.case.classList.toggle("quiet", quiet);
+    if (window.RathMusic) window.RathMusic.setMood(quiet ? "quiet" : "sneaky");
   }
 
   function bindEndingScene(sc) {
@@ -1345,9 +1347,10 @@
     btn.querySelector(".ico").textContent = on ? "❚❚" : "▶";
     btn.querySelector(".lbl").textContent = `${on ? "Pause" : "Play"} ${btn.dataset.label}`;
   };
-  player.addEventListener("play", () => setPlaying(playingBtn, true));
-  player.addEventListener("pause", () => setPlaying(playingBtn, false));
-  player.addEventListener("ended", () => setPlaying(playingBtn, false));
+  const duck = (v) => { if (window.RathMusic) window.RathMusic.duck(v); };
+  player.addEventListener("play", () => { setPlaying(playingBtn, true); duck(true); });
+  player.addEventListener("pause", () => { setPlaying(playingBtn, false); duck(false); });
+  player.addEventListener("ended", () => { setPlaying(playingBtn, false); duck(false); });
   function toggleAudio(btn) {
     const src = btn.dataset.audio;
     if (playingBtn === btn && !player.paused) { player.pause(); return; }
@@ -1446,6 +1449,17 @@
     if (saved && state.unlocked > 1) $("#resume-note").hidden = false;
 
     $("#open-case").addEventListener("click", openCase);
+    const toggles = [...document.querySelectorAll(".music-toggle")];
+    if (window.RathMusic) {
+      const sync = (isOn) => toggles.forEach((b) => {
+        b.setAttribute("aria-pressed", String(isOn));
+        b.textContent = isOn ? b.dataset.labelOn : b.dataset.labelOff;
+      });
+      toggles.forEach((b) => b.addEventListener("click", () => window.RathMusic.toggle()));
+      window.RathMusic.onChange(sync);
+    } else {
+      toggles.forEach((b) => { b.hidden = true; });
+    }
     const dlg = $("#ledger-dialog");
     $("#ledger-open").addEventListener("click", () => {
       renderLedger();
@@ -1483,8 +1497,8 @@
         return;
       }
       if (t.closest("#pass-it-on")) { passItOn(); return; }
-      if (t.closest("#examine-theory")) { state.theory = true; save(); rerenderTheory("#theory-reveal .sticky"); return; }
-      if (t.closest("#peek")) { state.lifted = true; save(); rerenderTheory("#poster figcaption"); return; }
+      if (t.closest("#examine-theory")) { if (window.RathMusic) window.RathMusic.stinger(false); state.theory = true; save(); rerenderTheory("#theory-reveal .sticky"); return; }
+      if (t.closest("#peek")) { if (window.RathMusic) window.RathMusic.stinger(true); state.lifted = true; save(); rerenderTheory("#poster figcaption"); return; }
       if (t.closest("#put-back")) { state.lifted = false; save(); rerenderTheory("#peek"); return; }
       if (t.closest("#end-next")) { endGo(state.end + 1); return; }
       if (t.closest("#end-prev")) { endGo(state.end - 1); return; }

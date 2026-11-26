@@ -36,6 +36,7 @@
               <p class="scribble fishing-note" aria-hidden="true">I was going fishing.</p>
               <p class="sr-only">Scrawled in the margin in red pen: “I was going fishing.”</p>
             </div>
+            <p class="music-line"><button type="button" class="btn-link music-toggle" aria-pressed="false" data-label-on="♪ Stop the conspiracy music" data-label-off="♪ Play the conspiracy music">♪ Play the conspiracy music</button></p>
             <p class="resume-note" id="resume-note" hidden>Your case file is right where you left it.</p>
           </div>
           <figure class="fp-photo">
@@ -51,6 +52,7 @@
       <nav class="case-nav" aria-label="Case file sections">
         <div class="wrap nav-row">
           <ol id="case-nav"></ol>
+          <button type="button" class="music-btn music-toggle" aria-pressed="false" data-label-on="♪ Music on" data-label-off="♪ Music off">♪ Music off</button>
           <button type="button" class="ledger-btn" id="ledger-open" aria-haspopup="dialog"><span class="long">Seen vs. Assumed</span><span class="short" aria-hidden="true">Seen/Assumed</span> <span id="ledger-badge">0/4</span></button>
         </div>
       </nav>
@@ -131,6 +133,7 @@
 
   <script>window.ASSET_V = "__BUILD__";</script>
   <script src="audio-script.js?v=__BUILD__"></script>
+  <script src="music.js?v=__BUILD__"></script>
   <script src="app.js?v=__BUILD__"></script>
 </body>
 </html>
