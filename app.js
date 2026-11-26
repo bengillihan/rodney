@@ -511,6 +511,14 @@
       ],
     },
   ];
+  /* Version image URLs per deploy, so a CDN or browser never pairs a page with a stale or cached-404 image. */
+  const V = typeof window.ASSET_V === "string" && window.ASSET_V && window.ASSET_V !== "__BUILD__" ? window.ASSET_V : "";
+  const ver = (src) => (V && src && !src.includes("?") ? `${src}?v=${V}` : src);
+  Object.values(IMAGES).forEach((im) => { im.src = ver(im.src); });
+  Object.keys(ICONS).forEach((k) => { ICONS[k] = ver(ICONS[k]); });
+  CAST_PHOTO.src = ver(CAST_PHOTO.src);
+  POSTER.src = ver(POSTER.src);
+  ENDING.forEach((sc) => sc.blocks.forEach((b) => { if (b[0] === "stamp" && b[2]) b[2] = ver(b[2]); }));
   const VERDICT_INDEX = ENDING.findIndex((s) => s.interactive === "verdict");
   const LAST_INDEX = ENDING.length - 1;
 

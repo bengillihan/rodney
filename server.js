@@ -26,11 +26,11 @@ http.createServer((req, res) => {
   const ext = path.extname(file).toLowerCase();
   if (!file.startsWith(ROOT + path.sep) || rel.split("/").some((p) => p.startsWith(".")) ||
       !PUBLIC.has(ext) || BLOCKED.has(path.relative(ROOT, file))) {
-    res.writeHead(404, { "Content-Type": "text/plain" }).end("Not found");
+    res.writeHead(404, { "Content-Type": "text/plain", "Cache-Control": "no-store" }).end("Not found");
     return;
   }
   fs.stat(file, (err, st) => {
-    if (err || !st.isFile()) { res.writeHead(404, { "Content-Type": "text/plain" }).end("Not found"); return; }
+    if (err || !st.isFile()) { res.writeHead(404, { "Content-Type": "text/plain", "Cache-Control": "no-store" }).end("Not found"); return; }
     const headers = {
       "Content-Type": TYPES[ext] || "application/octet-stream",
       "Content-Length": st.size,
